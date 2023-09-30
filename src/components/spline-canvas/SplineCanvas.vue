@@ -11,24 +11,30 @@ import { Nullable } from 'src/models/generic';
 import { ref, Ref, watch } from 'vue';
 import { drawAxis } from 'components/spline-canvas/draw-axis';
 import {
-  colors,
   configStage,
   invertY,
   origin,
 } from 'components/spline-canvas/resources';
+import { bullshitPointsAdapter } from 'components/spline-canvas/utils';
 
 const stageRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 
 const axisLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 const splineLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 
+const initialPoints = [
+  {
+    x: origin.x,
+    y: invertY(origin.y),
+  },
+  {
+    x: configStage.width,
+    y: invertY(configStage.height),
+  },
+];
+
 let redLine = new Konva.Line({
-  points: [
-    origin.x,
-    invertY(origin.y),
-    configStage.width,
-    invertY(configStage.height),
-  ],
+  points: bullshitPointsAdapter(initialPoints),
   stroke: '#ff964f',
   strokeWidth: 2,
   lineCap: 'round',
