@@ -1,6 +1,16 @@
 <template>
-  <q-page padding class="q-gutter-y-md">
-    <div class="text-h6">hello</div>
+  <q-page padding class="row">
+    <div class="column full-width q-gutter-y-md">
+      <q-banner rounded class="q-pa-md">
+        <div class="text-h6">Spline color correction</div>
+      </q-banner>
+      <div class="overflow-auto">
+        <div class="row q-gutter-md">
+          <q-card flat class="col-4 q-pa-md"> spline </q-card>
+          <q-card flat class="col q-pa-md"> img </q-card>
+        </div>
+      </div>
+    </div>
   </q-page>
 </template>
 

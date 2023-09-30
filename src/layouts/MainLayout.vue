@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class="bg-dull">
     <q-header elevated>
       <q-toolbar class="bg-teal-7">
         <q-btn
@@ -42,7 +42,7 @@ import { RouteName } from 'src/router/route-name';
 const essentialLinks: EssentialLinkProps[] = [
   {
     title: 'Spline correction',
-    icon: 'stacked_line_chart',
+    icon: 'gesture',
     routeName: RouteName.SPLINE_CORRECTION,
   },
 ];
@@ -53,3 +53,5 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<style lang="scss"></style>
