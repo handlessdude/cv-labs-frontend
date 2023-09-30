@@ -10,36 +10,17 @@ import Konva from 'konva';
 import { Nullable } from 'src/models/generic';
 import { ref, Ref, watch } from 'vue';
 import { drawAxis } from 'components/spline-canvas/draw-axis';
-import {
-  configStage,
-  invertY,
-  origin,
-} from 'components/spline-canvas/resources';
-import { bullshitPointsAdapter } from 'components/spline-canvas/utils';
+import { configStage } from 'components/spline-canvas/resources';
 
 const stageRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 const axisLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 const splineLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 
-const initialPoints = [
-  {
-    x: origin.x,
-    y: invertY(origin.y),
-  },
-  {
-    x: configStage.width,
-    y: invertY(configStage.height),
-  },
-];
-
-let redLine = new Konva.Line({
-  points: bullshitPointsAdapter(initialPoints),
-  stroke: '#ff964f',
+let spline = new Konva.Line({
+  id: 'spline',
+  points: [],
+  stroke: 'blue',
   strokeWidth: 2,
-  lineCap: 'round',
-  lineJoin: 'round',
-  tension: 1,
-  draggable: true,
 });
 
 const stageSetup = (
@@ -47,55 +28,80 @@ const stageSetup = (
   layer: Konva.Layer,
   spline: Konva.Line
 ) => {
-  let isDrawing = false;
-  const splinePoints: Array<number> = [];
+  // Initialize an array to store control points
+  const controlPoints = [];
 
-  stage.on('mousedown', () => {
-    isDrawing = true;
-    const pointerPos = stage.getPointerPosition();
-    if (!pointerPos) {
+  // Function to add a draggable control point
+  function addControlPoint(x: number, y: number) {
+    const controlPoint = new Konva.Circle({
+      x,
+      y,
+      radius: 5,
+      fill: 'red',
+      draggable: true,
+    });
+
+    controlPoint.on('dragmove', () => {
+      updateSpline();
+    });
+
+    layer.add(controlPoint);
+    controlPoints.push(controlPoint);
+  }
+
+  // Function to update the Catmull-Rom spline
+  function updateSpline() {
+    if (controlPoints.length < 4) {
       return;
     }
-    splinePoints.push(pointerPos.x, pointerPos.y);
+
+    const splinePoints = [];
+
+    for (let i = 1; i < controlPoints.length - 2; i++) {
+      const p0 = controlPoints[i - 1];
+      const p1 = controlPoints[i];
+      const p2 = controlPoints[i + 1];
+      const p3 = controlPoints[i + 2];
+
+      for (let t = 0; t <= 1; t += 0.01) {
+        const x =
+          0.5 *
+          (2 * p1.x() +
+            (-p0.x() + p2.x()) * t +
+            (2 * p0.x() - 5 * p1.x() + 4 * p2.x() - p3.x()) * t * t +
+            (-p0.x() + 3 * p1.x() - 3 * p2.x() + p3.x()) * t * t * t);
+
+        const y =
+          0.5 *
+          (2 * p1.y() +
+            (-p0.y() + p2.y()) * t +
+            (2 * p0.y() - 5 * p1.y() + 4 * p2.y() - p3.y()) * t * t +
+            (-p0.y() + 3 * p1.y() - 3 * p2.y() + p3.y()) * t * t * t);
+
+        splinePoints.push(x, y);
+      }
+    }
+
     spline.points(splinePoints);
-    // layer.batchDraw();
-  });
+  }
 
-  stage.on('mousemove', () => {
-    if (!isDrawing) return;
-    const pointerPos = stage.getPointerPosition();
-    if (!pointerPos) return;
+  // Add initial control points
+  addControlPoint(50, 50);
+  addControlPoint(100, 200);
+  addControlPoint(300, 300);
+  addControlPoint(350, 350);
 
-    const lastIndex = splinePoints.length - 2;
-    splinePoints[lastIndex] = pointerPos.x;
-    splinePoints[lastIndex + 1] = pointerPos.y;
-    spline.points(splinePoints);
-    // layer.batchDraw();
-  });
-
-  stage.on('mouseup', () => {
-    isDrawing = false;
-  });
-
-  stage.on('mouseleave', () => {
-    isDrawing = false;
-  });
-
-  /*  stage.on('dblclick', () => {
-    isDrawing = false;
-    splinePoints.length = 0;
-    spline.points([]);
-    // layer.batchDraw();
-  });*/
+  // Update the spline initially
+  updateSpline();
 };
 
 watch(splineLayerRef, (newLayer) => {
   if (!newLayer || !stageRef.value) {
     return;
   }
-  newLayer.getNode().add(redLine);
   drawAxis(newLayer.getNode(), stageRef.value?.getNode());
-  stageSetup(stageRef.value.getNode(), newLayer.getNode(), redLine);
+  newLayer.getNode().add(spline);
+  stageSetup(stageRef.value.getNode(), newLayer.getNode(), spline);
   stageRef.value.getNode().container().style.backgroundColor = '#dcefea';
 });
 </script>
