@@ -6,7 +6,7 @@
       </q-banner>
       <div class="overflow-auto">
         <div class="row workfield__container q-gutter-md">
-          <q-card flat class="col-4 q-pa-md spline__container"> spline </q-card>
+          <q-card flat class="q-pa-md spline__container"> spline </q-card>
           <q-card flat class="col q-pa-md img__container"> img </q-card>
         </div>
       </div>
@@ -34,7 +34,10 @@ onMounted(async () => {
   padding-right: 0;
 }
 .workfield__container {
-  @media screen and (max-width: $breakpoint-xs) {
+  .spline__container {
+    width: 400px;
+  }
+  @media screen and (max-width: $breakpoint-sm) {
     flex-direction: column;
     overflow: hidden;
     .spline__container {
