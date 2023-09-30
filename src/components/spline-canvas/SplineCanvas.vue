@@ -19,7 +19,7 @@ const splineLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 let spline = new Konva.Line({
   id: 'spline',
   points: [],
-  stroke: 'blue',
+  stroke: '#ff964f',
   strokeWidth: 2,
 });
 
@@ -37,7 +37,7 @@ const stageSetup = (
       x,
       y,
       radius: 5,
-      fill: 'red',
+      fill: '#ec8550',
       draggable: true,
     });
 
