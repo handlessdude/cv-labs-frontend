@@ -6,8 +6,18 @@
       </q-banner>
       <div class="overflow-auto">
         <div class="row workfield__container q-gutter-md">
-          <q-card flat class="q-pa-md spline__container"> spline </q-card>
-          <q-card flat class="col q-pa-md img__container"> img </q-card>
+          <q-card
+            flat
+            class="q-pa-md spline__container row justify-center items-center"
+          >
+            <SplineCanvas />
+          </q-card>
+          <q-card
+            flat
+            class="col q-pa-md img__container row justify-center items-center"
+          >
+            img
+          </q-card>
         </div>
       </div>
     </div>
@@ -17,6 +27,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { sanityCheckService } from 'src/services/sanity-check.service';
+import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 
 onMounted(async () => {
   const hello = await sanityCheckService.check();
