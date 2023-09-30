@@ -15,6 +15,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
+    "cubic-spline": "^3.0.3",
     "dotenv": "^16.3.1",
     "konva": "^9.2.1",
     "pinia": "^2.0.11",
