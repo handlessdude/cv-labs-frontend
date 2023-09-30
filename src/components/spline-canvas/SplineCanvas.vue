@@ -11,6 +11,7 @@ import { Nullable } from 'src/models/generic';
 import { ref, Ref, watch } from 'vue';
 import { drawAxis } from 'components/spline-canvas/draw-axis';
 import {
+  colors,
   configStage,
   invertY,
   origin,
@@ -28,18 +29,13 @@ let redLine = new Konva.Line({
     configStage.width,
     invertY(configStage.height),
   ],
-  stroke: 'red',
-  strokeWidth: 4,
+  stroke: '#ff964f',
+  strokeWidth: 2,
   lineCap: 'round',
   lineJoin: 'round',
   tension: 1,
   draggable: true,
 });
-
-// redLine.move({
-//   x: 20,
-//   y: 5,
-// });
 
 watch(splineLayerRef, (newLayer) => {
   if (!newLayer || !stageRef.value) {
@@ -47,6 +43,7 @@ watch(splineLayerRef, (newLayer) => {
   }
   newLayer.getNode().add(redLine);
   drawAxis(newLayer.getNode(), stageRef.value?.getNode());
+  stageRef.value.getNode().container().style.backgroundColor = '#dcefea';
 });
 </script>
 

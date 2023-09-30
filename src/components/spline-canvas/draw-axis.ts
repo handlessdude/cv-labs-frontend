@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { invertY, origin } from 'components/spline-canvas/resources';
+import { colors, invertY, origin } from 'components/spline-canvas/resources';
 
 const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
   const axisPadding = 0;
@@ -14,7 +14,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
       stage.width() - axisPadding,
       invertY(origin.y),
     ],
-    stroke: 'black',
+    stroke: colors.accentGray,
     strokeWidth: 1,
   });
 
@@ -28,7 +28,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
   ) {
     const tick = new Konva.Line({
       points: [x, invertY(origin.y), x, invertY(tickLength)],
-      stroke: 'black',
+      stroke: colors.accentGray,
       strokeWidth: 1,
     });
     layer.add(tick);
@@ -38,7 +38,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
       x: x - 10,
       y: invertY(2.5 * tickLength),
       fontSize: 12,
-      fill: 'black',
+      fill: colors.accentGray,
     });
 
     layer.add(label);
@@ -47,7 +47,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
   // Create Y axis
   const yAxis = new Konva.Line({
     points: [0, axisPadding, 0, stage.height() - axisPadding],
-    stroke: 'black',
+    stroke: colors.accentGray,
     strokeWidth: 1,
   });
 
@@ -61,7 +61,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
   ) {
     const tick = new Konva.Line({
       points: [0, y, tickLength, y],
-      stroke: 'black',
+      stroke: colors.accentGray,
       strokeWidth: 1,
     });
 
@@ -72,7 +72,7 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
       x: tickLength,
       y: y - 5,
       fontSize: 12,
-      fill: 'black',
+      fill: colors.accentGray,
     });
 
     layer.add(label);
@@ -84,10 +84,10 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
         stage.width(),
         invertY(stage.height()),
       ],
-      stroke: 'black',
+      stroke: colors.accentGray,
       strokeWidth: 1,
     });
-    layer.add(upperBorder);
+    //layer.add(upperBorder);
 
     const rightBorder = new Konva.Line({
       points: [
@@ -96,10 +96,10 @@ const drawAxis = (layer: Konva.Layer, stage: Konva.Stage) => {
         stage.width(),
         invertY(stage.height()),
       ],
-      stroke: 'black',
+      stroke: colors.accentGray,
       strokeWidth: 1,
     });
-    layer.add(rightBorder);
+    //layer.add(rightBorder);
   }
 };
 

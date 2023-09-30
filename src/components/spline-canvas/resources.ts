@@ -12,4 +12,8 @@ const configStage = {
 
 const invertY = makeYInverter(configStage);
 
-export { origin, configStage, invertY };
+const colors = {
+  accentGray: '#5e5e5e',
+};
+
+export { origin, configStage, invertY, colors };
