@@ -5,9 +5,9 @@
         <div class="text-h6">Spline color correction</div>
       </q-banner>
       <div class="overflow-auto">
-        <div class="row q-gutter-md">
-          <q-card flat class="col-4 q-pa-md"> spline </q-card>
-          <q-card flat class="col q-pa-md"> img </q-card>
+        <div class="row workfield__container q-gutter-md">
+          <q-card flat class="col-4 q-pa-md spline__container"> spline </q-card>
+          <q-card flat class="col q-pa-md img__container"> img </q-card>
         </div>
       </div>
     </div>
@@ -32,5 +32,14 @@ onMounted(async () => {
 .q-table__top {
   padding-left: 0;
   padding-right: 0;
+}
+.workfield__container {
+  @media screen and (max-width: $breakpoint-xs) {
+    flex-direction: column;
+    overflow: hidden;
+    .spline__container {
+      width: 100%;
+    }
+  }
 }
 </style>
