@@ -12,8 +12,13 @@ const configStage = {
 
 const invertY = makeYInverter(configStage);
 
-const colors = {
+const palette = {
   accentGray: '#5e5e5e',
+  lineStroke: '#ff964f',
+  pointStroke: '#dc7d4c',
+  // background: '#dcefea',
+  background: '#cfe7e0',
 };
 
-export { origin, configStage, invertY, colors };
+const pointLabelOffset = 10;
+export { origin, configStage, invertY, palette, pointLabelOffset };

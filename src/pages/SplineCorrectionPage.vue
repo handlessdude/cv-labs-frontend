@@ -16,7 +16,7 @@
             flat
             class="col q-pa-md img__container row justify-center items-center"
           >
-            img
+            <NoImagePlaceholder />
           </q-card>
         </div>
       </div>
@@ -28,6 +28,7 @@
 import { onMounted } from 'vue';
 import { sanityCheckService } from 'src/services/sanity-check.service';
 import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
+import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
 
 onMounted(async () => {
   const hello = await sanityCheckService.check();
