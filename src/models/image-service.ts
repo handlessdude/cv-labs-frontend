@@ -4,10 +4,26 @@ interface ImageHist {
   b: Array<number>;
 }
 
-interface ImageSchemaOut {
+interface ImageSchema {
   id: string;
-  img: string;
+  img_src: string;
   hist: ImageHist;
+  img_alt?: string;
 }
 
-export type { ImageSchemaOut, ImageHist };
+interface CorrectionSchema {
+  img_in: ImageSchema;
+  img_out: ImageSchema;
+}
+
+interface SplineCorrectionParams {
+  xp: Array<number>;
+  fp: Array<number>;
+}
+
+export type {
+  ImageSchema,
+  ImageHist,
+  CorrectionSchema,
+  SplineCorrectionParams,
+};

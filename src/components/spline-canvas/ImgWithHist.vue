@@ -1,6 +1,7 @@
 <template>
-  <div class="column" style="max-width: 100%">
-    <img ref="imgRef" :src="imgSrc" :alt="imgAlt" />
+  <div class="column q-gutter-y-md" style="max-width: 100%">
+    <div v-if="img_alt" class="text-h6">{{ img_alt }}</div>
+    <img ref="imgRef" :src="img_src" :alt="img_alt" />
     <Bar :data="barData" :options="barOptions" />
   </div>
 </template>
@@ -31,13 +32,14 @@ ChartJS.register(
   ArcElement
 );
 
-interface ImagesListProps {
-  imgSrc: string;
-  imgAlt: string;
+interface ImageSchemaProps {
+  id: string;
+  img_src: string;
   hist: ImageHist;
+  img_alt?: string;
 }
 
-const props = defineProps<ImagesListProps>();
+const props = defineProps<ImageSchemaProps>();
 const imgRef: Ref<Nullable<HTMLImageElement>> = ref(null);
 
 const rgbPalette = {

@@ -6,10 +6,7 @@
       </q-banner>
       <div class="overflow-auto">
         <div class="row workfield__container q-gutter-md">
-          <q-card
-            flat
-            class="q-pa-md spline__container row justify-center items-center"
-          >
+          <q-card flat class="q-pa-md spline__container column">
             <SplineCanvas @update="updateImage" />
             <q-table
               title="Points"
@@ -25,14 +22,19 @@
             class="col data__container row justify-center items-center q-pa-md"
             style="max-width: 100%"
           >
-            <ProgressIndicator v-if="isRequestLoading" />
-            <NoImagePlaceholder v-else-if="!imgSrc" />
-            <ImgWithHist
-              v-else
-              :img-src="imgSrc"
-              img-alt="Sample img"
-              :hist="hist"
-            />
+            <div
+              v-if="imgSchemes.length && !isRequestLoading"
+              :class="imgListClasses"
+            >
+              <ImgWithHist
+                v-for="imgSchema in imgSchemes"
+                :key="imgSchema.id"
+                v-bind:="imgSchema"
+                class="col"
+              />
+            </div>
+            <ProgressIndicator v-if="!imgSchemes.length && !isRequestLoading" />
+            <NoImagePlaceholder v-if="!imgSchemes.length && isRequestLoading" />
           </q-card>
         </div>
       </div>
@@ -41,26 +43,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, Ref, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
 import { debounce } from 'quasar';
-import { Iterable, Nullable, Point } from 'src/models/generic';
+import { Iterable, Point } from 'src/models/generic';
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
 import { colorCorrectionService } from 'src/services/color-correction.service';
-import { imageService } from 'src/services/image.service';
-import { ImageHist } from 'src/models/image-service';
+import { ImageSchema } from 'src/models/image-service';
 import ImgWithHist from 'components/spline-canvas/ImgWithHist.vue';
 
 const isRequestLoading = ref(false);
 const statistics: Ref<Array<Iterable & Point>> = ref([]);
 
-const hist: Ref<ImageHist> = ref({
-  r: [],
-  g: [],
-  b: [],
-});
+const imgSchemes: Ref<Array<ImageSchema>> = ref([]);
 
 const updateImage = debounce(
   async (
@@ -71,15 +68,22 @@ const updateImage = debounce(
     try {
       isRequestLoading.value = true;
       statistics.value = points;
-      const data = await colorCorrectionService.splineCorrection({
-        xp,
-        fp,
-      });
-      if (data.img) {
-        // img.value = await base64ToImage(res.img, 'Corrected img');
-        imgSrc.value = data.img;
-        hist.value = data.hist;
-      }
+      const { img_in, img_out } = await colorCorrectionService.splineCorrection(
+        {
+          xp,
+          fp,
+        }
+      );
+      imgSchemes.value = [
+        {
+          img_alt: 'Image in',
+          ...img_in,
+        },
+        {
+          img_alt: 'Image out',
+          ...img_out,
+        },
+      ];
     } catch (e) {
       console.log(e);
     } finally {
@@ -89,16 +93,19 @@ const updateImage = debounce(
   50
 );
 
-const imgSrc = ref('');
-onMounted(async () => {
-  const data = await imageService.getItem();
-  // img.value = await base64ToImage(data.img, 'Sample img');
-  imgSrc.value = data.img;
-  hist.value = data.hist;
-});
+const imgListClasses = computed(() => [
+  'row items-start full-height q-gutter-x-md',
+  {
+    'half-opacity': imgSchemes.value.length && isRequestLoading.value,
+  },
+]);
 </script>
 
 <style lang="scss">
+.half-opacity {
+  opacity: 0.5;
+}
+
 .q-table__title {
   font-weight: 500;
 }

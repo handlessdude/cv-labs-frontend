@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <q-circular-progress
     indeterminate
@@ -8,7 +6,10 @@
     color="teal"
     track-color="orange"
     style="opacity: 0.8"
+    class="progress-indicator"
   />
 </template>
+
+<script setup lang="ts"></script>
 
 <style scoped lang="scss"></style>
