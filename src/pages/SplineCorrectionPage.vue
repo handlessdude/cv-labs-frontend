@@ -22,10 +22,7 @@
             class="col data__container row justify-center items-center q-pa-md"
             style="max-width: 100%"
           >
-            <div
-              v-if="imgSchemes.length && !isRequestLoading"
-              :class="imgListClasses"
-            >
+            <div v-if="imgSchemes.length" :class="imgListClasses">
               <ImgWithHist
                 v-for="imgSchema in imgSchemes"
                 :key="imgSchema.id"
@@ -33,8 +30,7 @@
                 class="col"
               />
             </div>
-            <ProgressIndicator v-if="!imgSchemes.length && !isRequestLoading" />
-            <NoImagePlaceholder v-if="!imgSchemes.length && isRequestLoading" />
+            <NoImagePlaceholder v-else />
           </q-card>
         </div>
       </div>
@@ -46,9 +42,7 @@
 import { computed, Ref, ref } from 'vue';
 import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
-import { debounce } from 'quasar';
 import { Iterable, Point } from 'src/models/generic';
-import ProgressIndicator from 'components/ProgressIndicator.vue';
 import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
 import { colorCorrectionService } from 'src/services/color-correction.service';
 import { ImageSchema } from 'src/models/image-service';
@@ -59,45 +53,40 @@ const statistics: Ref<Array<Iterable & Point>> = ref([]);
 
 const imgSchemes: Ref<Array<ImageSchema>> = ref([]);
 
-const updateImage = debounce(
-  async (
-    points: Array<Iterable & Point>,
-    xp: Array<number>,
-    fp: Array<number>
-  ) => {
-    try {
-      isRequestLoading.value = true;
-      statistics.value = points;
-      const { img_in, img_out } = await colorCorrectionService.splineCorrection(
-        {
-          xp,
-          fp,
-        }
-      );
-      imgSchemes.value = [
-        {
-          img_alt: 'Image in',
-          ...img_in,
-        },
-        {
-          img_alt: 'Image out',
-          ...img_out,
-        },
-      ];
-    } catch (e) {
-      console.log(e);
-    } finally {
-      isRequestLoading.value = false;
-    }
-  },
-  50
-);
+const updateImage = async (
+  points: Array<Iterable & Point>,
+  xp: Array<number>,
+  fp: Array<number>
+) => {
+  try {
+    isRequestLoading.value = true;
+    statistics.value = points;
+    const { img_in, img_out } = await colorCorrectionService.splineCorrection({
+      xp,
+      fp,
+    });
+    imgSchemes.value = [
+      {
+        img_alt: 'Image in',
+        ...img_in,
+      },
+      {
+        img_alt: 'Image out',
+        ...img_out,
+      },
+    ];
+  } catch (e) {
+    console.log(e);
+  } finally {
+    isRequestLoading.value = false;
+  }
+};
 
 const imgListClasses = computed(() => [
   'row items-start full-height q-gutter-x-md',
-  {
+  /*  {
     'half-opacity': imgSchemes.value.length && isRequestLoading.value,
-  },
+  },*/
 ]);
 </script>
 
