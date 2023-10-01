@@ -24,8 +24,9 @@
             flat
             class="col q-pa-md img__container row justify-center items-center"
           >
-            <ProgressIndicator v-if="isImageProcessing" />
-            <NoImagePlaceholder v-else-if="!processingResult" />
+            <ProgressIndicator v-if="isRequestLoading" />
+            <NoImagePlaceholder v-else-if="!img" />
+            <ImagesList v-else :img="img" :hist="hist" />
           </q-card>
         </div>
       </div>
@@ -35,29 +36,59 @@
 
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue';
-import { sanityCheckService } from 'src/services/sanity-check.service';
 import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
 import { debounce } from 'quasar';
-import { Iterable, Point } from 'src/models/generic';
+import { Iterable, Nullable, Point } from 'src/models/generic';
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
+import { colorCorrectionService } from 'src/services/color-correction.service';
+import ImagesList from 'components/spline-canvas/ImagesList.vue';
+import { base64ToImage } from 'components/spline-canvas/utils';
+import { imageService } from 'src/services/image.service';
+import { ImageHist } from 'src/models/image-service';
 
+const isRequestLoading = ref(false);
 const statistics: Ref<Array<Iterable & Point>> = ref([]);
 
+const img: Ref<Nullable<HTMLImageElement>> = ref(null);
+const hist: Ref<ImageHist> = ref({
+  r: [],
+  g: [],
+  b: [],
+});
+
 const updateImage = debounce(
-  (points: Array<Iterable & Point>, xp: Array<number>, fp: Array<number>) => {
-    statistics.value = points;
+  async (
+    points: Array<Iterable & Point>,
+    xp: Array<number>,
+    fp: Array<number>
+  ) => {
+    try {
+      isRequestLoading.value = true;
+      statistics.value = points;
+      const res = await colorCorrectionService.splineCorrection({
+        xp,
+        fp,
+      });
+      if (res.img) {
+        img.value = await base64ToImage(res.img, 'Corrected img');
+        hist.value = res.hist;
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      isRequestLoading.value = false;
+    }
   },
   50
 );
 
-const processingResult = ref('');
-const isImageProcessing = ref(false);
-
 onMounted(async () => {
-  const hello = await sanityCheckService.check();
-  console.log(hello.status);
+  const data = await imageService.getItem();
+  img.value = await base64ToImage(data.img, 'Sample img');
+  console.log(img.value);
+  hist.value = data.hist;
 });
 </script>
 
