@@ -1,4 +1,5 @@
 import { HttpBasedService } from 'src/services/httb-based.service';
+import { ImageHist } from 'src/models/image-service';
 
 const BASE_PATH = '/color-correction';
 
@@ -7,7 +8,7 @@ const SPLINE_PATH = '/spline';
 interface Correction {
   id: string;
   img: string;
-  hist: Array<number>;
+  hist: ImageHist;
 }
 
 interface SplineCorrectionParams {

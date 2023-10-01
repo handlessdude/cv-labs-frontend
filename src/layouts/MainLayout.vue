@@ -15,10 +15,9 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer v-model="leftDrawerOpen" :show-if-above="false" bordered>
       <q-list>
         <q-item-label header> Color correction </q-item-label>
-
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"

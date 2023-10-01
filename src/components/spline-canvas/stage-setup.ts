@@ -36,6 +36,16 @@ const stageSetup = (
       updateSpline();
     });
 
+    controlPoint.on('mouseover', () => {
+      document.body.style.cursor = 'pointer';
+      controlPoint.scale({ x: 1.5, y: 1.5 });
+    });
+
+    controlPoint.on('mouseout', () => {
+      document.body.style.cursor = 'default';
+      controlPoint.scale({ x: 1, y: 1 });
+    });
+
     const label = new Konva.Text({
       text: controlPoints.value.length.toString(),
       x: x + pointLabelOffset,

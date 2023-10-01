@@ -15,6 +15,7 @@ const pointsTableColumns = ref([
     label: 'X',
     field: 'x',
     align: 'left',
+    format: (val: number) => val.toFixed(4)
   },
   {
     name: 'y',
@@ -22,6 +23,7 @@ const pointsTableColumns = ref([
     label: 'Y',
     field: 'y',
     align: 'left',
+    format: (val: number) => val.toFixed(4)
   },
 ]);
 

@@ -22,11 +22,17 @@
           </q-card>
           <q-card
             flat
-            class="col q-pa-md img__container row justify-center items-center"
+            class="col data__container row justify-center items-center q-pa-md"
+            style="max-width: 100%"
           >
             <ProgressIndicator v-if="isRequestLoading" />
-            <NoImagePlaceholder v-else-if="!img" />
-            <ImagesList v-else :img="img" :hist="hist" />
+            <NoImagePlaceholder v-else-if="!imgSrc" />
+            <ImgWithHist
+              v-else
+              :img-src="imgSrc"
+              img-alt="Sample img"
+              :hist="hist"
+            />
           </q-card>
         </div>
       </div>
@@ -43,15 +49,13 @@ import { Iterable, Nullable, Point } from 'src/models/generic';
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
 import { colorCorrectionService } from 'src/services/color-correction.service';
-import ImagesList from 'components/spline-canvas/ImagesList.vue';
-import { base64ToImage } from 'components/spline-canvas/utils';
 import { imageService } from 'src/services/image.service';
 import { ImageHist } from 'src/models/image-service';
+import ImgWithHist from 'components/spline-canvas/ImgWithHist.vue';
 
 const isRequestLoading = ref(false);
 const statistics: Ref<Array<Iterable & Point>> = ref([]);
 
-const img: Ref<Nullable<HTMLImageElement>> = ref(null);
 const hist: Ref<ImageHist> = ref({
   r: [],
   g: [],
@@ -67,13 +71,14 @@ const updateImage = debounce(
     try {
       isRequestLoading.value = true;
       statistics.value = points;
-      const res = await colorCorrectionService.splineCorrection({
+      const data = await colorCorrectionService.splineCorrection({
         xp,
         fp,
       });
-      if (res.img) {
-        img.value = await base64ToImage(res.img, 'Corrected img');
-        hist.value = res.hist;
+      if (data.img) {
+        // img.value = await base64ToImage(res.img, 'Corrected img');
+        imgSrc.value = data.img;
+        hist.value = data.hist;
       }
     } catch (e) {
       console.log(e);
@@ -84,10 +89,11 @@ const updateImage = debounce(
   50
 );
 
+const imgSrc = ref('');
 onMounted(async () => {
   const data = await imageService.getItem();
-  img.value = await base64ToImage(data.img, 'Sample img');
-  console.log(img.value);
+  // img.value = await base64ToImage(data.img, 'Sample img');
+  imgSrc.value = data.img;
   hist.value = data.hist;
 });
 </script>
