@@ -2,6 +2,10 @@
 
 Frontend for computer vision course
 
+![image](https://github.com/handlessdude/cv-labs-frontend/assets/61969421/3dafde27-2b1d-49ab-a59c-f84448048c3a)
+
+# How to launch
+
 ## Install the dependencies
 ```bash
 yarn
