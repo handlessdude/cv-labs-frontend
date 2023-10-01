@@ -8,6 +8,7 @@ const origin = {
 const configStage = {
   width: 368,
   height: 400,
+  borderRadius: 4,
 };
 
 const invertY = makeYInverter(configStage);

@@ -72,6 +72,7 @@ watch(splineLayerRef, (newLayer) => {
   });
   stageRef.value.getNode().container().style.backgroundColor =
     palette.background;
+  stageRef.value.getNode().container().style.borderRadius = '4px';
 });
 </script>
 
