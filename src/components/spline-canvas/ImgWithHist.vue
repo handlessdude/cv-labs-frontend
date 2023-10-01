@@ -66,6 +66,7 @@ const barOptions = { responsive: true };
 
 <style scoped lang="scss">
 img {
+  border-radius: 4px;
   height: auto;
   max-width: 100%;
   object-fit: contain;
