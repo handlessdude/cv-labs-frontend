@@ -1,6 +1,10 @@
 import Konva from 'konva';
 import Spline from 'components/spline-canvas/draw-spline';
-import { palette, pointLabelOffset } from 'components/spline-canvas/resources';
+import {
+  invertY,
+  palette,
+  pointLabelOffset,
+} from 'components/spline-canvas/resources';
 import { ref, Ref } from 'vue';
 import { Nullable } from 'src/models/generic';
 
@@ -96,11 +100,11 @@ const stageSetup = (
     spline.points(splinePoints);
   }
 
-  addControlPoint(10, 10);
-  addControlPoint(50, 50);
-  addControlPoint(100, 200);
-  addControlPoint(300, 300);
-  addControlPoint(350, 350);
+  addControlPoint(30, invertY(30));
+  addControlPoint(117, invertY(82));
+  addControlPoint(170, invertY(169));
+  addControlPoint(215, invertY(279));
+  addControlPoint(346, invertY(371));
 
   // Update the spline initially
   updateSpline();
