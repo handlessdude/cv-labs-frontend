@@ -101,10 +101,10 @@ const stageSetup = (
   }
 
   addControlPoint(30, invertY(30));
-  addControlPoint(117, invertY(82));
-  addControlPoint(170, invertY(169));
-  addControlPoint(215, invertY(279));
-  addControlPoint(346, invertY(371));
+  addControlPoint(117, invertY(80));
+  addControlPoint(170, invertY(170));
+  addControlPoint(215, invertY(280));
+  addControlPoint(346, invertY(370));
 
   // Update the spline initially
   updateSpline();
