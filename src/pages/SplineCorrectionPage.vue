@@ -14,7 +14,7 @@
             <q-table
               title="Points"
               :rows="statistics"
-              :columns="statisticsColumns"
+              :columns="pointsTableColumns"
               row-key="id"
               flat
               class="full-width q-mt-md"
@@ -24,7 +24,8 @@
             flat
             class="col q-pa-md img__container row justify-center items-center"
           >
-            <NoImagePlaceholder />
+            <ProgressIndicator v-if="isImageProcessing" />
+            <NoImagePlaceholder v-else-if="!processingResult" />
           </q-card>
         </div>
       </div>
@@ -39,13 +40,11 @@ import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
 import { debounce } from 'quasar';
 import { Iterable, Point } from 'src/models/generic';
+import ProgressIndicator from 'components/ProgressIndicator.vue';
+import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
 
-onMounted(async () => {
-  const hello = await sanityCheckService.check();
-  console.log(hello.status);
-});
+const statistics: Ref<Array<Iterable & Point>> = ref([]);
 
-//
 const updateImage = debounce(
   (points: Array<Iterable & Point>, xp: Array<number>, fp: Array<number>) => {
     statistics.value = points;
@@ -53,30 +52,13 @@ const updateImage = debounce(
   50
 );
 
-const statistics: Ref<Array<Iterable & Point>> = ref([]);
-const statisticsColumns = ref([
-  {
-    name: 'id',
-    required: true,
-    label: 'Number',
-    align: 'left',
-    field: (row: Iterable & Point) => row.id,
-  },
-  {
-    name: 'x',
-    required: true,
-    label: 'X',
-    field: 'x',
-    align: 'left',
-  },
-  {
-    name: 'y',
-    required: true,
-    label: 'Y',
-    field: 'y',
-    align: 'left',
-  },
-]);
+const processingResult = ref('');
+const isImageProcessing = ref(false);
+
+onMounted(async () => {
+  const hello = await sanityCheckService.check();
+  console.log(hello.status);
+});
 </script>
 
 <style lang="scss">
