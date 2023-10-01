@@ -6,7 +6,7 @@ Frontend for computer vision course
 
 # How to launch
 
-## Install the dependencies
+### Install the dependencies
 ```bash
 yarn
 # or
