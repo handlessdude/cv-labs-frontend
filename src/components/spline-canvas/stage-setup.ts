@@ -1,14 +1,17 @@
 import Konva from 'konva';
 import Spline from 'components/spline-canvas/draw-spline';
 import { palette, pointLabelOffset } from 'components/spline-canvas/resources';
+import { ref, Ref } from 'vue';
+import { Nullable } from 'src/models/generic';
 
 const stageSetup = (
   stage: Konva.Stage,
   layer: Konva.Layer,
   spline: Konva.Line
 ) => {
-  // Initialize an array to store control points
-  const controlPoints: Array<Konva.Circle> = [];
+  const controlPoints: Ref<Array<Konva.Circle>> = ref([]);
+  const interpolator: Ref<Nullable<Spline>> = ref(null);
+
   const controlPointLabels: Array<Konva.Text> = [];
 
   const moveLabel = (label: Konva.Text, controlPoint: Konva.Circle) => {
@@ -21,6 +24,7 @@ const stageSetup = (
   // Function to add a draggable control point
   function addControlPoint(x: number, y: number) {
     const controlPoint = new Konva.Circle({
+      name: 'control-point',
       x,
       y,
       radius: 5,
@@ -33,7 +37,7 @@ const stageSetup = (
     });
 
     const label = new Konva.Text({
-      text: controlPoints.length.toString(),
+      text: controlPoints.value.length.toString(),
       x: x + pointLabelOffset,
       y: y - pointLabelOffset,
       fontSize: 12,
@@ -42,29 +46,29 @@ const stageSetup = (
 
     layer.add(label);
     layer.add(controlPoint);
-    controlPoints.push(controlPoint);
+    controlPoints.value.push(controlPoint);
     controlPointLabels.push(label);
   }
 
   function updateSpline() {
-    if (controlPoints.length < 5) {
+    if (controlPoints.value.length < 5) {
       return;
     }
-    controlPoints.forEach((point, idx) => {
+    controlPoints.value.forEach((point, idx) => {
       moveLabel(controlPointLabels[idx], point);
     });
 
-    const adapter = new Spline(
-      controlPoints.map((p) => p.x()),
-      controlPoints.map((p) => p.y())
+    interpolator.value = new Spline(
+      controlPoints.value.map((p) => p.x()),
+      controlPoints.value.map((p) => p.y())
     );
 
     const splinePoints = [];
 
-    let leftmostX = controlPoints[0].x();
-    let rightmostX = controlPoints[0].x();
+    let leftmostX = controlPoints.value[0].x();
+    let rightmostX = controlPoints.value[0].x();
 
-    controlPoints.forEach((point) => {
+    controlPoints.value.forEach((point) => {
       const x = point.x();
       if (x < leftmostX) {
         leftmostX = x;
@@ -77,7 +81,7 @@ const stageSetup = (
     const delta = (rightmostX - leftmostX) / 100;
     for (let i = 0; i < 100; i++) {
       const x = leftmostX + i * delta;
-      splinePoints.push(x, adapter.at(x));
+      splinePoints.push(x, interpolator.value.at(x));
     }
     spline.points(splinePoints);
   }
@@ -90,6 +94,11 @@ const stageSetup = (
 
   // Update the spline initially
   updateSpline();
+
+  return {
+    interpolator,
+    controlPoints,
+  };
 };
 
 export { stageSetup };

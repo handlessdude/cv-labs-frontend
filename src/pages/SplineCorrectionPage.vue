@@ -10,7 +10,15 @@
             flat
             class="q-pa-md spline__container row justify-center items-center"
           >
-            <SplineCanvas />
+            <SplineCanvas @update="updateImage" />
+            <q-table
+              title="Points"
+              :rows="statistics"
+              :columns="statisticsColumns"
+              row-key="id"
+              flat
+              class="full-width q-mt-md"
+            />
           </q-card>
           <q-card
             flat
@@ -25,15 +33,50 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import { sanityCheckService } from 'src/services/sanity-check.service';
 import SplineCanvas from 'components/spline-canvas/SplineCanvas.vue';
 import NoImagePlaceholder from 'components/NoImagePlaceholder.vue';
+import { debounce } from 'quasar';
+import { Iterable, Point } from 'src/models/generic';
 
 onMounted(async () => {
   const hello = await sanityCheckService.check();
   console.log(hello.status);
 });
+
+//
+const updateImage = debounce(
+  (points: Array<Iterable & Point>, xp: Array<number>, fp: Array<number>) => {
+    statistics.value = points;
+  },
+  50
+);
+
+const statistics: Ref<Array<Iterable & Point>> = ref([]);
+const statisticsColumns = ref([
+  {
+    name: 'id',
+    required: true,
+    label: 'Number',
+    align: 'left',
+    field: (row: Iterable & Point) => row.id,
+  },
+  {
+    name: 'x',
+    required: true,
+    label: 'X',
+    field: 'x',
+    align: 'left',
+  },
+  {
+    name: 'y',
+    required: true,
+    label: 'Y',
+    field: 'y',
+    align: 'left',
+  },
+]);
 </script>
 
 <style lang="scss">
@@ -56,5 +99,9 @@ onMounted(async () => {
       width: 100%;
     }
   }
+}
+
+.q-table__container {
+  color: $basic-dark !important;
 }
 </style>

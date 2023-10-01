@@ -9,6 +9,13 @@ export default class Spline {
     this.ks = this.getNaturalKs(new Float64Array(this.xs.length));
   }
 
+  getXp() {
+    return this.xs;
+  }
+  getFp() {
+    return this.ys;
+  }
+
   getNaturalKs(ks: Float64Array) {
     const n = this.xs.length - 1;
     const A = zerosMat(n + 1, n + 2);
