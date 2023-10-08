@@ -40,9 +40,19 @@ import EssentialLink, {
 import { RouteName } from 'src/router/route-name';
 const essentialLinks: EssentialLinkProps[] = [
   {
-    title: 'Spline correction',
+    title: 'Dashboard',
+    icon: 'dashboard',
+    routeName: RouteName.DASHBOARD,
+  },
+  {
+    title: 'Ex. 01: Spline correction',
     icon: 'gesture',
     routeName: RouteName.SPLINE_CORRECTION,
+  },
+  {
+    title: '03: Binarization and quantization',
+    icon: 'view_comfy_alt',
+    routeName: RouteName.BINARIZATION_QUANTIZATION,
   },
 ];
 

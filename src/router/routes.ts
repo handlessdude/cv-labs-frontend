@@ -8,8 +8,18 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
+        name: RouteName.DASHBOARD,
+        component: () => import('pages/DashboardPage.vue'),
+      },
+      {
+        path: '',
         name: RouteName.SPLINE_CORRECTION,
         component: () => import('pages/SplineCorrectionPage.vue'),
+      },
+      {
+        path: '',
+        name: RouteName.BINARIZATION_QUANTIZATION,
+        component: () => import('pages/BinarizationQuantizationPage.vue'),
       },
     ],
   },
