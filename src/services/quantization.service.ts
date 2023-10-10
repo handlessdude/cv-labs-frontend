@@ -6,6 +6,7 @@ const BASE_PATH = '/quantization';
 enum QuantizationPaths {
   HALFTONE_PATH = '/halftone',
   QUANTIZATION_PATH = '/quantitize',
+  OTSU_GLOBAL_PATH = '/otsu-global',
 }
 
 interface QuantizationParams {
@@ -29,6 +30,13 @@ class QuantizationService extends HttpBasedService {
           levels: params.levels.join(','),
         },
       }
+    );
+    return res.data;
+  }
+
+  async getOtsuGlobal() {
+    const res = await this.httpClient.get<CorrectionSchema>(
+      BASE_PATH + QuantizationPaths.OTSU_GLOBAL_PATH
     );
     return res.data;
   }

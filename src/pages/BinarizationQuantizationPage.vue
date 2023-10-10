@@ -41,6 +41,15 @@
             />
             <ImgWithHist v-bind:="quantitizedImgSchema" />
           </TableCard>
+
+          <TableCard v-if="otsuGlobal">
+            <ParagraphTitle
+              icon="image"
+              text="02. Quantitized image"
+              class="q-mb-sm"
+            />
+            <ImgWithHist v-bind:="otsuGlobal" />
+          </TableCard>
         </div>
       </div>
     </div>
@@ -62,6 +71,8 @@ const isRequestLoading = ref(false);
 const imgInSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const halftoneImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const quantitizedImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
+const otsuGlobal: Ref<Nullable<ImageSchema>> = ref(null);
+
 onMounted(async () => {
   try {
     isRequestLoading.value = true;
@@ -74,6 +85,9 @@ onMounted(async () => {
       levels: [70, 100, 170],
     });
     quantitizedImgSchema.value = quantitized;
+
+    const { img_out: otsuGlobaled } = await quantizationService.getOtsuGlobal();
+    otsuGlobal.value = otsuGlobaled;
 
     halftoneImgSchema.value = halftone;
   } catch (e) {
