@@ -46,7 +46,7 @@ import { Iterable, Point } from 'src/models/generic';
 import { pointsTableColumns } from 'components/spline-canvas/points-table-columns';
 import { colorCorrectionService } from 'src/services/color-correction.service';
 import { ImageSchema } from 'src/models/image-service';
-import ImgWithHist from 'components/spline-canvas/ImgWithHist.vue';
+import ImgWithHist from 'components/ImgWithHist.vue';
 
 const isRequestLoading = ref(false);
 const statistics: Ref<Array<Iterable & Point>> = ref([]);

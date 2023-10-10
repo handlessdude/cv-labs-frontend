@@ -12,12 +12,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DashboardPage.vue'),
       },
       {
-        path: '',
+        path: '/spline',
         name: RouteName.SPLINE_CORRECTION,
         component: () => import('pages/SplineCorrectionPage.vue'),
       },
       {
-        path: '',
+        path: '/quantization',
         name: RouteName.BINARIZATION_QUANTIZATION,
         component: () => import('pages/BinarizationQuantizationPage.vue'),
       },
