@@ -32,6 +32,15 @@
             />
             <ImgWithHist v-bind:="halftoneImgSchema" />
           </TableCard>
+
+          <TableCard v-if="quantitizedImgSchema">
+            <ParagraphTitle
+              icon="image"
+              text="02. Quantitized image"
+              class="q-mb-sm"
+            />
+            <ImgWithHist v-bind:="quantitizedImgSchema" />
+          </TableCard>
         </div>
       </div>
     </div>
@@ -40,8 +49,7 @@
 
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue';
-import { Iterable, Nullable, Point } from 'src/models/generic';
-import { colorCorrectionService } from 'src/services/color-correction.service';
+import { Nullable } from 'src/models/generic';
 import { ImageSchema } from 'src/models/image-service';
 import ParagraphTitle from 'components/ParagraphTitle.vue';
 import { quantizationService } from 'src/services/quantization.service';
@@ -53,46 +61,27 @@ const isRequestLoading = ref(false);
 
 const imgInSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const halftoneImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
+const quantitizedImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 onMounted(async () => {
   try {
     isRequestLoading.value = true;
-    const { img_in, img_out } = await quantizationService.getHalftone();
+    const { img_in, img_out: halftone } =
+      await quantizationService.getHalftone();
     imgInSchema.value = img_in;
-    halftoneImgSchema.value = img_out;
+    halftoneImgSchema.value = halftone;
+
+    const { img_out: quantitized } = await quantizationService.getQuantitized({
+      levels: [70, 100, 170],
+    });
+    quantitizedImgSchema.value = quantitized;
+
+    halftoneImgSchema.value = halftone;
   } catch (e) {
     console.log(e);
   } finally {
     isRequestLoading.value = false;
   }
 });
-const updateImage = async (
-  points: Array<Iterable & Point>,
-  xp: Array<number>,
-  fp: Array<number>
-) => {
-  try {
-    isRequestLoading.value = true;
-    statistics.value = points;
-    const { img_in, img_out } = await colorCorrectionService.splineCorrection({
-      xp,
-      fp,
-    });
-    imgSchemes.value = [
-      {
-        img_alt: 'Image in',
-        ...img_in,
-      },
-      {
-        img_alt: 'Image out',
-        ...img_out,
-      },
-    ];
-  } catch (e) {
-    console.log(e);
-  } finally {
-    isRequestLoading.value = false;
-  }
-};
 </script>
 
 <style scoped lang="scss">
