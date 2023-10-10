@@ -45,7 +45,7 @@
           <TableCard v-if="otsuGlobal">
             <ParagraphTitle
               icon="image"
-              text="02. Quantitized image"
+              text="03. Otsu global"
               class="q-mb-sm"
             />
             <ImgWithHist v-bind:="otsuGlobal" />
