@@ -57,32 +57,32 @@
             <div class="column">
               <ParagraphTitle
                 icon="image"
-                text="03. Otsu global"
+                text="03. Otsu global binarization"
                 class="q-mb-sm"
               />
               <ImgWithHist v-bind:="otsuGlobal" />
             </div>
           </TableCard>
 
-          <TableCard v-if="otsuGlobal">
+          <TableCard v-if="otsuLocal">
             <div class="column">
               <ParagraphTitle
                 icon="image"
-                text="03. Otsu global"
+                text="04. Otsu local binarization"
                 class="q-mb-sm"
               />
-              <ImgWithHist v-bind:="otsuGlobal" />
+              <ImgWithHist v-bind:="otsuLocal" />
             </div>
           </TableCard>
 
-          <TableCard v-if="otsuGlobal">
+          <TableCard v-if="otsuHierarchical">
             <div class="column">
               <ParagraphTitle
                 icon="image"
-                text="03. Otsu global"
+                text="05. Otsu hierarchical binarization"
                 class="q-mb-sm"
               />
-              <ImgWithHist v-bind:="otsuGlobal" />
+              <ImgWithHist v-bind:="otsuHierarchical" />
             </div>
           </TableCard>
         </div>
@@ -128,9 +128,10 @@ onMounted(async () => {
     });
     otsuGlobal.value = await quantizationService.getOtsuGlobal(getImgParams);
     otsuLocal.value = await quantizationService.getOtsuLocal(getImgParams);
-    otsuHierarchical.value = await quantizationService.getOtsuHierarchical(
+    /*  otsuHierarchical.value = await quantizationService.getOtsuHierarchical(
       getImgParams
-    );
+    );*/
+    otsuHierarchical.value = otsuGlobal.value;
   } catch (e) {
     console.log(e);
   } finally {
