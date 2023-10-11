@@ -17,7 +17,7 @@
       <div class="overflow-auto full-width">
         <div class="row q-col-gutter-md-md">
           <TableCard v-if="imgInSchema">
-            <div class="column q-pa-md">
+            <div class="column">
               <ParagraphTitle
                 icon="image"
                 text="0. Source image"
@@ -28,7 +28,7 @@
           </TableCard>
 
           <TableCard v-if="halftoneImgSchema">
-            <div class="column q-pa-md">
+            <div class="column">
               <ParagraphTitle
                 icon="image"
                 text="01. Halftone image"
@@ -39,7 +39,7 @@
           </TableCard>
 
           <TableCard v-if="quantitizedImgSchema">
-            <div class="column q-pa-md">
+            <div class="column">
               <ParagraphTitle
                 icon="image"
                 text="02. Quantitized image"
@@ -50,7 +50,7 @@
           </TableCard>
 
           <TableCard v-if="otsuGlobal">
-            <div class="column q-pa-md">
+            <div class="column">
               <ParagraphTitle
                 icon="image"
                 text="03. Otsu global"
