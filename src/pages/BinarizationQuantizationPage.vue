@@ -15,7 +15,7 @@
       </q-card>
 
       <div class="overflow-auto full-width">
-        <div class="row q-col-gutter-md-md">
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard v-if="imgInSchema">
             <div class="column">
               <ParagraphTitle
@@ -52,7 +52,7 @@
       </div>
 
       <div class="overflow-auto full-width">
-        <div class="row q-col-gutter-md-md">
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard v-if="otsuGlobal">
             <div class="column">
               <ParagraphTitle
