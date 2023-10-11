@@ -6,6 +6,7 @@ interface ImageHist {
 
 interface ImageSchema {
   id: string;
+  name: string;
   img_src: string;
   hist: ImageHist;
   img_alt?: string;

@@ -48,6 +48,32 @@
               <ImgWithHist v-bind:="quantitizedImgSchema" />
             </div>
           </TableCard>
+        </div>
+      </div>
+
+      <div class="overflow-auto full-width">
+        <div class="row q-col-gutter-md-md">
+          <TableCard v-if="otsuGlobal">
+            <div class="column">
+              <ParagraphTitle
+                icon="image"
+                text="03. Otsu global"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuGlobal" />
+            </div>
+          </TableCard>
+
+          <TableCard v-if="otsuGlobal">
+            <div class="column">
+              <ParagraphTitle
+                icon="image"
+                text="03. Otsu global"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuGlobal" />
+            </div>
+          </TableCard>
 
           <TableCard v-if="otsuGlobal">
             <div class="column">
@@ -82,6 +108,8 @@ const imgInSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const halftoneImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const quantitizedImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const otsuGlobal: Ref<Nullable<ImageSchema>> = ref(null);
+const otsuLocal: Ref<Nullable<ImageSchema>> = ref(null);
+const otsuHierarchical: Ref<Nullable<ImageSchema>> = ref(null);
 
 const getImgParams = {
   name: 'gosling1.png',
@@ -99,6 +127,10 @@ onMounted(async () => {
       levels: [70, 100, 170],
     });
     otsuGlobal.value = await quantizationService.getOtsuGlobal(getImgParams);
+    otsuLocal.value = await quantizationService.getOtsuLocal(getImgParams);
+    otsuHierarchical.value = await quantizationService.getOtsuHierarchical(
+      getImgParams
+    );
   } catch (e) {
     console.log(e);
   } finally {
