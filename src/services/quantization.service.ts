@@ -1,5 +1,10 @@
 import { HttpBasedService } from 'src/services/httb-based.service';
-import { CorrectionSchema } from 'src/models/image-service';
+import {
+  CorrectionSchema,
+  GetImageParams,
+  ImageSchema,
+  QuantizationParams,
+} from 'src/models/image-service';
 
 const BASE_PATH = '/quantization';
 
@@ -9,34 +14,38 @@ enum QuantizationPaths {
   OTSU_GLOBAL_PATH = '/otsu-global',
 }
 
-interface QuantizationParams {
-  levels: Array<number>;
-}
+const quantizationParamsAdapter = (params: QuantizationParams) => ({
+  ...params,
+  levels: params.levels.join(','),
+});
 
 class QuantizationService extends HttpBasedService {
-  async getHalftone() {
-    const res = await this.httpClient.get<CorrectionSchema>(
-      BASE_PATH + QuantizationPaths.HALFTONE_PATH
-    );
-    return res.data;
-  }
-
-  async getQuantitized(params: QuantizationParams) {
-    const res = await this.httpClient.get<CorrectionSchema>(
-      BASE_PATH + QuantizationPaths.QUANTIZATION_PATH,
+  async getHalftone(params: GetImageParams) {
+    const res = await this.httpClient.get<ImageSchema>(
+      BASE_PATH + QuantizationPaths.HALFTONE_PATH,
       {
-        params: {
-          ...params,
-          levels: params.levels.join(','),
-        },
+        params,
       }
     );
     return res.data;
   }
 
-  async getOtsuGlobal() {
-    const res = await this.httpClient.get<CorrectionSchema>(
-      BASE_PATH + QuantizationPaths.OTSU_GLOBAL_PATH
+  async getQuantitized(params: QuantizationParams) {
+    const res = await this.httpClient.get<ImageSchema>(
+      BASE_PATH + QuantizationPaths.QUANTIZATION_PATH,
+      {
+        params: quantizationParamsAdapter(params),
+      }
+    );
+    return res.data;
+  }
+
+  async getOtsuGlobal(params: GetImageParams) {
+    const res = await this.httpClient.get<ImageSchema>(
+      BASE_PATH + QuantizationPaths.OTSU_GLOBAL_PATH,
+      {
+        params,
+      }
     );
     return res.data;
   }

@@ -21,9 +21,19 @@ interface SplineCorrectionParams {
   fp: Array<number>;
 }
 
+interface GetImageParams {
+  name: string;
+}
+
+interface QuantizationParams extends GetImageParams {
+  levels: Array<number>;
+}
+
 export type {
   ImageSchema,
   ImageHist,
   CorrectionSchema,
   SplineCorrectionParams,
+  GetImageParams,
+  QuantizationParams,
 };

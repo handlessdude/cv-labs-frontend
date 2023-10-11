@@ -1,11 +1,13 @@
 import { HttpBasedService } from 'src/services/httb-based.service';
-import { ImageSchemaOut } from 'src/models/image-service';
+import { GetImageParams, ImageSchema } from 'src/models/image-service';
 
 const BASE_PATH = '/image';
 
 class ImageService extends HttpBasedService {
-  async getItem() {
-    const res = await this.httpClient.get<ImageSchemaOut>(BASE_PATH);
+  async getItem(params: Partial<GetImageParams> = {}) {
+    const res = await this.httpClient.get<ImageSchema>(BASE_PATH, {
+      params,
+    });
     return res.data;
   }
 }

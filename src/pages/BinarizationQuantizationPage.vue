@@ -15,40 +15,49 @@
       </q-card>
 
       <div class="overflow-auto full-width">
-        <div class="row q-gutter-lg">
+        <div class="row q-col-gutter-md-md">
           <TableCard v-if="imgInSchema">
-            <ParagraphTitle
-              icon="image"
-              text="0. Source image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="imgInSchema" />
+            <div class="column q-pa-md">
+              <ParagraphTitle
+                icon="image"
+                text="0. Source image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="imgInSchema" />
+            </div>
           </TableCard>
+
           <TableCard v-if="halftoneImgSchema">
-            <ParagraphTitle
-              icon="image"
-              text="01. Halftone image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="halftoneImgSchema" />
+            <div class="column q-pa-md">
+              <ParagraphTitle
+                icon="image"
+                text="01. Halftone image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="halftoneImgSchema" />
+            </div>
           </TableCard>
 
           <TableCard v-if="quantitizedImgSchema">
-            <ParagraphTitle
-              icon="image"
-              text="02. Quantitized image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="quantitizedImgSchema" />
+            <div class="column q-pa-md">
+              <ParagraphTitle
+                icon="image"
+                text="02. Quantitized image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="quantitizedImgSchema" />
+            </div>
           </TableCard>
 
           <TableCard v-if="otsuGlobal">
-            <ParagraphTitle
-              icon="image"
-              text="03. Otsu global"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="otsuGlobal" />
+            <div class="column q-pa-md">
+              <ParagraphTitle
+                icon="image"
+                text="03. Otsu global"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuGlobal" />
+            </div>
           </TableCard>
         </div>
       </div>
@@ -65,6 +74,7 @@ import { quantizationService } from 'src/services/quantization.service';
 import ImgWithHist from 'components/ImgWithHist.vue';
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 import TableCard from 'components/TableCard.vue';
+import { imageService } from 'src/services/image.service';
 
 const isRequestLoading = ref(false);
 
@@ -73,23 +83,22 @@ const halftoneImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const quantitizedImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const otsuGlobal: Ref<Nullable<ImageSchema>> = ref(null);
 
+const getImgParams = {
+  name: 'gosling1.png',
+};
+
 onMounted(async () => {
   try {
     isRequestLoading.value = true;
-    const { img_in, img_out: halftone } =
-      await quantizationService.getHalftone();
-    imgInSchema.value = img_in;
-    halftoneImgSchema.value = halftone;
-
-    const { img_out: quantitized } = await quantizationService.getQuantitized({
+    imgInSchema.value = await imageService.getItem(getImgParams);
+    halftoneImgSchema.value = await quantizationService.getHalftone(
+      getImgParams
+    );
+    quantitizedImgSchema.value = await quantizationService.getQuantitized({
+      ...getImgParams,
       levels: [70, 100, 170],
     });
-    quantitizedImgSchema.value = quantitized;
-
-    const { img_out: otsuGlobaled } = await quantizationService.getOtsuGlobal();
-    otsuGlobal.value = otsuGlobaled;
-
-    halftoneImgSchema.value = halftone;
+    otsuGlobal.value = await quantizationService.getOtsuGlobal(getImgParams);
   } catch (e) {
     console.log(e);
   } finally {
