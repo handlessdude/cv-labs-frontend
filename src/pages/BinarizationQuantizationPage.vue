@@ -14,42 +14,61 @@
         </div>
       </q-card>
 
-      <div class="overflow-auto full-width">
-        <div class="row q-gutter-lg">
-          <TableCard v-if="imgInSchema">
-            <ParagraphTitle
-              icon="image"
-              text="0. Source image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="imgInSchema" />
-          </TableCard>
-          <TableCard v-if="halftoneImgSchema">
-            <ParagraphTitle
-              icon="image"
-              text="01. Halftone image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="halftoneImgSchema" />
-          </TableCard>
+      <div class="img__table">
+        <div class="overflow-auto full-width">
+          <div class="row q-gutter-lg">
+            <TableCard v-if="imgInSchema">
+              <ParagraphTitle
+                icon="image"
+                text="0. Source image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="imgInSchema" />
+            </TableCard>
+            <TableCard v-if="halftoneImgSchema">
+              <ParagraphTitle
+                icon="image"
+                text="01. Halftone image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="halftoneImgSchema" />
+            </TableCard>
 
-          <TableCard v-if="quantitizedImgSchema">
-            <ParagraphTitle
-              icon="image"
-              text="02. Quantitized image"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="quantitizedImgSchema" />
-          </TableCard>
-
-          <TableCard v-if="otsuGlobal">
-            <ParagraphTitle
-              icon="image"
-              text="03. Otsu global"
-              class="q-mb-sm"
-            />
-            <ImgWithHist v-bind:="otsuGlobal" />
-          </TableCard>
+            <TableCard v-if="quantitizedImgSchema">
+              <ParagraphTitle
+                icon="image"
+                text="02. Quantitized image"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="quantitizedImgSchema" />
+            </TableCard>
+          </div>
+          <div class="row q-gutter-lg q-mt-xs">
+            <TableCard v-if="otsuGlobal">
+              <ParagraphTitle
+                icon="image"
+                text="03. Otsu global"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuGlobal" />
+            </TableCard>
+            <TableCard v-if="otsuHierarchical">
+              <ParagraphTitle
+                icon="image"
+                text="04. Otsu local"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuHierarchical" />
+            </TableCard>
+            <TableCard v-if="otsuHierarchical">
+              <ParagraphTitle
+                icon="image"
+                text="05. Otsu hierarchical"
+                class="q-mb-sm"
+              />
+              <ImgWithHist v-bind:="otsuHierarchical" />
+            </TableCard>
+          </div>
         </div>
       </div>
     </div>
@@ -72,6 +91,8 @@ const imgInSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const halftoneImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const quantitizedImgSchema: Ref<Nullable<ImageSchema>> = ref(null);
 const otsuGlobal: Ref<Nullable<ImageSchema>> = ref(null);
+const otsuLocal: Ref<Nullable<ImageSchema>> = ref(null);
+const otsuHierarchical: Ref<Nullable<ImageSchema>> = ref(null);
 
 onMounted(async () => {
   try {
@@ -86,10 +107,14 @@ onMounted(async () => {
     });
     quantitizedImgSchema.value = quantitized;
 
-    const { img_out: otsuGlobaled } = await quantizationService.getOtsuGlobal();
-    otsuGlobal.value = otsuGlobaled;
+    const { img_out: otsuGlobalSchema } =
+      await quantizationService.getOtsuGlobal();
+    otsuGlobal.value = otsuGlobalSchema;
 
-    halftoneImgSchema.value = halftone;
+    const { img_out: otsuHierarchicalSchema } =
+      await quantizationService.getOtsuHierarchical();
+    otsuLocal.value = otsuHierarchicalSchema; // todo make otsu local
+    otsuHierarchical.value = otsuHierarchicalSchema;
   } catch (e) {
     console.log(e);
   } finally {
