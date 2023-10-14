@@ -1,21 +1,24 @@
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
+import { Nullable } from 'src/models/generic';
 
-const useFetcher = (callback: (...params: any[]) => Promise<void>) => {
-  const isRequestLoading = ref(false);
+const useFetcher = <T>(callback: (...params: any[]) => Promise<T>) => {
+  const isLoading = ref(false);
+  const data: Ref<Nullable<T>> = ref(null);
 
-  const load = async (...params: any[]) => {
+  const triggerFetch = async (...params: any[]) => {
     try {
-      isRequestLoading.value = true;
-      await callback(params);
+      isLoading.value = true;
+      data.value = await callback(params);
+      isLoading.value = false;
+      console.log(data.value);
     } catch (e) {
       console.log(e);
-    } finally {
-      isRequestLoading.value = false;
     }
   };
   return {
-    isRequestLoading,
-    load,
+    isLoading,
+    triggerFetch,
+    data,
   };
 };
 

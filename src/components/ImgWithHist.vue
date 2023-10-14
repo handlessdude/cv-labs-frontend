@@ -1,16 +1,23 @@
 <template>
-  <div class="column q-gutter-y-md" style="max-width: 100%">
-    <div v-if="img_alt" class="text-h6">{{ img_alt }}</div>
-    <img ref="imgRef" :src="img_src" :alt="img_alt" />
+  <div
+    v-if="loading || !imgSchema"
+    class="row flex-center overflow-hidden sosi"
+  >
+    <ProgressIndicator />
+  </div>
+  <div v-else class="column q-gutter-y-md" style="max-width: 100%">
+    <div v-if="imgSchema?.img_alt" class="text-h6">
+      {{ imgSchema?.img_alt }}
+    </div>
+    <img ref="imgRef" :src="imgSchema?.img_src" :alt="imgSchema?.img_alt" />
     <Bar :data="barData" :options="barOptions" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ImageHist } from 'src/models/image-service';
-import { Ref, ref } from 'vue';
+import { ImageHist, ImageSchema } from 'src/models/image-service';
+import { computed, Ref, ref, watch } from 'vue';
 import { Nullable } from 'src/models/generic';
-import { ChartData } from 'src/models/chart';
 import {
   Chart as ChartJS,
   Title,
@@ -22,6 +29,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { Bar } from 'vue-chartjs';
+import ProgressIndicator from 'components/ProgressIndicator.vue';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,14 +41,20 @@ ChartJS.register(
 );
 
 interface ImageSchemaProps {
-  id: string;
-  img_src: string;
-  hist: ImageHist;
-  img_alt?: string;
+  imgSchema: Nullable<ImageSchema>;
+  loading?: boolean;
 }
 
 const props = defineProps<ImageSchemaProps>();
 const imgRef: Ref<Nullable<HTMLImageElement>> = ref(null);
+
+watch(
+  () => props.loading,
+  (newVal) => {
+    console.log(newVal);
+  },
+  { immediate: true }
+);
 
 const rgbPalette = {
   r: '#FF0000',
@@ -60,7 +74,9 @@ const histToBarChart = (hist: ImageHist) => {
   };
 };
 
-const barData: Ref<ChartData> = ref(histToBarChart(props.hist));
+const barData = computed(
+  () => (props.imgSchema && histToBarChart(props.imgSchema?.hist)) || null
+);
 const barOptions = { responsive: true };
 </script>
 
@@ -70,5 +86,9 @@ img {
   height: auto;
   max-width: 100%;
   object-fit: contain;
+}
+
+.sosi {
+  flex-grow: 1;
 }
 </style>
