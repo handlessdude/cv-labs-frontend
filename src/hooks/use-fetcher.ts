@@ -10,7 +10,6 @@ const useFetcher = <T>(callback: (...params: any[]) => Promise<T>) => {
       isLoading.value = true;
       data.value = await callback(params);
       isLoading.value = false;
-      console.log(data.value);
     } catch (e) {
       console.log(e);
     }

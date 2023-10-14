@@ -141,7 +141,7 @@ const {
   isLoading: isOtsuHierarchicalLoading,
   triggerFetch: fetchOtsuHierarchical,
 } = useFetcher<ImageSchema>(
-  async () => await quantizationService.getOtsuGlobal(getImgParams)
+  async () => await quantizationService.getOtsuHierarchical(getImgParams)
 );
 
 onMounted(() => {

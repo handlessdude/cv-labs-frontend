@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ImageHist, ImageSchema } from 'src/models/image-service';
-import { computed, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { Nullable } from 'src/models/generic';
 import {
   Chart as ChartJS,
@@ -47,14 +47,6 @@ interface ImageSchemaProps {
 
 const props = defineProps<ImageSchemaProps>();
 const imgRef: Ref<Nullable<HTMLImageElement>> = ref(null);
-
-watch(
-  () => props.loading,
-  (newVal) => {
-    console.log(newVal);
-  },
-  { immediate: true }
-);
 
 const rgbPalette = {
   r: '#FF0000',
