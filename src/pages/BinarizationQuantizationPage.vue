@@ -70,7 +70,10 @@
               text="05. Otsu hierarchical binarization"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="imgInSchema" :loading="isImgInLoading" />
+            <ImgWithHist
+              :img-schema="otsuHierarchical"
+              :loading="isOtsuHierarchicalLoading"
+            />
           </TableCard>
         </div>
       </div>
@@ -90,6 +93,7 @@ import { ImageSchema } from 'src/models/image-service';
 
 const getImgParams = {
   name: 'gosling1.png',
+  // name: 'normalization.png',
 };
 
 const {
