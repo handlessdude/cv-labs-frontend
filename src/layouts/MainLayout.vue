@@ -54,6 +54,11 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'view_comfy_alt',
     routeName: RouteName.BINARIZATION_QUANTIZATION,
   },
+  {
+    title: '04: Morphological operations',
+    icon: 'hub',
+    routeName: RouteName.MORPHOLOGY,
+  },
 ];
 
 const leftDrawerOpen = ref(false);

@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.BINARIZATION_QUANTIZATION,
         component: () => import('pages/BinarizationQuantizationPage.vue'),
       },
+      {
+        path: '/morphology',
+        name: RouteName.MORPHOLOGY,
+        component: () => import('pages/MorphologyPage.vue'),
+      },
     ],
   },
   {

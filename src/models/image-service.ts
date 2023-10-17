@@ -1,3 +1,5 @@
+import { Nullable } from 'src/models/generic';
+
 interface ImageHist {
   r: Array<number>;
   g: Array<number>;
@@ -8,7 +10,7 @@ interface ImageSchema {
   id: string;
   name: string;
   img_src: string;
-  hist: ImageHist;
+  hist: Nullable<ImageHist>;
   img_alt?: string;
 }
 

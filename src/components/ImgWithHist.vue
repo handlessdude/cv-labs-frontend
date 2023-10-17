@@ -9,8 +9,12 @@
     <div v-if="imgSchema?.img_alt" class="text-h6">
       {{ imgSchema?.img_alt }}
     </div>
+    <div v-if="showResolution" class="row items-center text-caption">
+      <div class="q-mr-xs">Image resolution:</div>
+      <div>{{ imgRef?.naturalWidth }} x {{ imgRef?.naturalHeight }}</div>
+    </div>
     <img ref="imgRef" :src="imgSchema?.img_src" :alt="imgSchema?.img_alt" />
-    <Bar :data="barData" :options="barOptions" />
+    <Bar v-if="showHist" :data="barData" :options="barOptions" />
   </div>
 </template>
 
@@ -43,9 +47,16 @@ ChartJS.register(
 interface ImageSchemaProps {
   imgSchema: Nullable<ImageSchema>;
   loading?: boolean;
+  showResolution?: boolean;
+  showHist?: boolean;
 }
 
-const props = defineProps<ImageSchemaProps>();
+const props = withDefaults(defineProps<ImageSchemaProps>(), {
+  showHist: true,
+});
+
+const showHist = computed(() => props.showHist && props.imgSchema?.hist);
+
 const imgRef: Ref<Nullable<HTMLImageElement>> = ref(null);
 
 const rgbPalette = {
