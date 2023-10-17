@@ -13,7 +13,7 @@
             flat
             v-for="schema in pipelineImgs"
             :key="schema.id"
-            style="max-width: 300px"
+            style="max-width: 450px"
           >
             <q-card-section class="q-pa-md">
               <ImgWithHist :img-schema="schema" />
