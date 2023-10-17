@@ -27,7 +27,11 @@ interface GetImageParams {
 }
 
 interface QuantizationParams extends GetImageParams {
-  levels: Array<number>;
+  levels: string; // todo make docs
+}
+
+interface OtsuLocalParams extends GetImageParams {
+  height_delims: string; // todo make docs
 }
 
 export type {
@@ -37,4 +41,5 @@ export type {
   SplineCorrectionParams,
   GetImageParams,
   QuantizationParams,
+  OtsuLocalParams,
 };

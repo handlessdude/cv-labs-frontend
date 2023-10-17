@@ -33,6 +33,13 @@
               text="02. Quantitized image"
               class="q-mb-sm"
             />
+            <q-input
+              v-model.trim="quantizationLevels"
+              placeholder="Quantization levels..."
+              outlined
+              class="q-mb-md"
+              dense
+            />
             <ImgWithHist
               :img-schema="quantitizedImgSchema"
               :loading="isQuantitizedLoading"
@@ -59,6 +66,13 @@
               text="04. Otsu local binarization"
               class="q-mb-sm"
             />
+            <q-input
+              v-model.trim="otsuLocalHeightDelims"
+              placeholder="Height delimeters..."
+              outlined
+              class="q-mb-md"
+              dense
+            />
             <ImgWithHist
               :img-schema="otsuLocal"
               :loading="isOtsuLocalLoading"
@@ -82,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ParagraphTitle from 'components/ParagraphTitle.vue';
 import { quantizationService } from 'src/services/quantization.service';
 import ImgWithHist from 'components/ImgWithHist.vue';
@@ -90,6 +104,12 @@ import TableCard from 'components/TableCard.vue';
 import { imageService } from 'src/services/image.service';
 import { useFetcher } from 'src/hooks/use-fetcher';
 import { ImageSchema } from 'src/models/image-service';
+import { debounce } from 'quasar';
+import {
+  DEFAULT_LEVELS,
+  FETCH_DEBOUNCE_MS,
+  OTSU_LOCAL,
+} from 'src/resources/quantization';
 
 const getImgParams = {
   name: 'gosling1.png',
@@ -112,6 +132,7 @@ const {
   async () => await quantizationService.getHalftone(getImgParams)
 );
 
+const quantizationLevels = ref(DEFAULT_LEVELS);
 const {
   data: quantitizedImgSchema,
   isLoading: isQuantitizedLoading,
@@ -120,8 +141,16 @@ const {
   async () =>
     await quantizationService.getQuantitized({
       ...getImgParams,
-      levels: [70, 100, 170],
+      levels: quantizationLevels.value,
     })
+);
+
+watch(
+  quantizationLevels,
+  debounce((newVal) => {
+    console.log(`fetching quantization for ${newVal}`);
+    fetchQuantitized();
+  }, FETCH_DEBOUNCE_MS)
 );
 
 const {
@@ -132,12 +161,24 @@ const {
   async () => await quantizationService.getOtsuGlobal(getImgParams)
 );
 
+const otsuLocalHeightDelims = ref(OTSU_LOCAL.height_delims);
 const {
   data: otsuLocal,
   isLoading: isOtsuLocalLoading,
   triggerFetch: fetchOtsuLocal,
 } = useFetcher<ImageSchema>(
-  async () => await quantizationService.getOtsuLocal(getImgParams)
+  async () =>
+    await quantizationService.getOtsuLocal({
+      ...getImgParams,
+      height_delims: otsuLocalHeightDelims.value,
+    })
+);
+watch(
+  otsuLocalHeightDelims,
+  debounce((newVal) => {
+    console.log(`fetching otsu local for ${newVal}`);
+    fetchOtsuLocal();
+  }, FETCH_DEBOUNCE_MS)
 );
 
 const {

@@ -2,6 +2,7 @@ import { HttpBasedService } from 'src/services/httb-based.service';
 import {
   GetImageParams,
   ImageSchema,
+  OtsuLocalParams,
   QuantizationParams,
 } from 'src/models/image-service';
 
@@ -15,10 +16,10 @@ enum QuantizationPaths {
   OTSU_HIERARCHICAL_PATH = '/otsu-hierarchical',
 }
 
-const quantizationParamsAdapter = (params: QuantizationParams) => ({
+/*const quantizationParamsAdapter = (params: QuantizationParams) => ({
   ...params,
   levels: params.levels.join(','),
-});
+});*/
 
 class QuantizationService extends HttpBasedService {
   async getHalftone(params: GetImageParams) {
@@ -34,9 +35,7 @@ class QuantizationService extends HttpBasedService {
   async getQuantitized(params: QuantizationParams) {
     const res = await this.httpClient.get<ImageSchema>(
       BASE_PATH + QuantizationPaths.QUANTIZATION_PATH,
-      {
-        params: quantizationParamsAdapter(params),
-      }
+      { params }
     );
     return res.data;
   }
@@ -51,7 +50,7 @@ class QuantizationService extends HttpBasedService {
     return res.data;
   }
 
-  async getOtsuLocal(params: GetImageParams) {
+  async getOtsuLocal(params: OtsuLocalParams) {
     const res = await this.httpClient.get<ImageSchema>(
       BASE_PATH + QuantizationPaths.OTSU_LOCAL_PATH,
       {
