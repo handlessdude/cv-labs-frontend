@@ -59,6 +59,11 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'hub',
     routeName: RouteName.MORPHOLOGY,
   },
+  {
+    title: '05: Spatial fitlering',
+    icon: 'hub',
+    routeName: RouteName.SPATIAL_FILTERING,
+  },
 ];
 
 const leftDrawerOpen = ref(false);

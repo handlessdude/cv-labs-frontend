@@ -26,6 +26,11 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.MORPHOLOGY,
         component: () => import('pages/MorphologyPage.vue'),
       },
+      {
+        path: '/spatial-filtering',
+        name: RouteName.SPATIAL_FILTERING,
+        component: () => import('pages/SpatialFilteringPage.vue'),
+      },
     ],
   },
   {
