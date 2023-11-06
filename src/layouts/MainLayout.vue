@@ -64,6 +64,11 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'hub',
     routeName: RouteName.SPATIAL_FILTERING,
   },
+  {
+    title: '06: Frequency fitlering',
+    icon: 'hub',
+    routeName: RouteName.FREQUENCY_FILTERING,
+  },
 ];
 
 const leftDrawerOpen = ref(false);

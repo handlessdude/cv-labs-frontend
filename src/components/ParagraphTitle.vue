@@ -1,5 +1,5 @@
 <template>
-  <div class="text-body1 row items-center" style="width: fit-content">
+  <div class="text-body1 row items-center no-wrap" style="width: fit-content">
     <q-icon v-if="icon" :name="icon" class="q-mr-md" />
     {{ text }}
   </div>

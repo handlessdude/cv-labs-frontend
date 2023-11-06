@@ -31,6 +31,11 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.SPATIAL_FILTERING,
         component: () => import('pages/SpatialFilteringPage.vue'),
       },
+      {
+        path: '/frequency-filtering',
+        name: RouteName.FREQUENCY_FILTERING,
+        component: () => import('pages/FrequencyFilteringPage.vue'),
+      },
     ],
   },
   {

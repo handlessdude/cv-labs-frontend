@@ -2,7 +2,7 @@
   <q-page padding class="row">
     <div class="column full-width q-gutter-y-md">
       <q-banner rounded class="q-pa-md">
-        <div class="text-h6">Morphological operations on binary images</div>
+        <div class="text-h6">Spatial filtering</div>
       </q-banner>
       <div class="row full-width justify-center">
         <div
