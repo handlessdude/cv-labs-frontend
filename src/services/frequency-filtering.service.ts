@@ -14,6 +14,7 @@ export interface TestSchema {
   source: ImageSchema;
   spectrum: ImageSchema;
   smoothing_schema: FilterApplicationSchema;
+  sharpening_schema: FilterApplicationSchema;
 }
 
 class FrequencyFilteringService extends HttpBasedService {

@@ -21,7 +21,7 @@
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="01. Image spectrum"
+              text="1. Image spectrum"
               class="q-mb-sm"
             />
             <ImgWithHist :img-schema="pipelineImgs.spectrum" />
@@ -46,7 +46,7 @@
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="2.1. Result of smoothing (spectrum form)"
+              text="2.1. Smoothing result (spectrum)"
               class="q-mb-sm"
             />
             <ImgWithHist :img-schema="pipelineImgs.smoothing_schema.spectrum" />
@@ -55,10 +55,45 @@
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="2.2. Result of smoothing (image form)"
+              text="2.2. Smoothing result (image)"
               class="q-mb-sm"
             />
             <ImgWithHist :img-schema="pipelineImgs.smoothing_schema.img_out" />
+          </TableCard>
+        </div>
+      </div>
+      <div
+        v-if="pipelineImgs && !areImgsLoading"
+        class="overflow-auto full-width"
+      >
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.0. Sharpening filter"
+              class="q-mb-sm"
+            />
+            <ImgWithHist :img-schema="pipelineImgs.sharpening_schema.filt" />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.1. Sharpening result (spectrum)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="pipelineImgs.sharpening_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.1. Sharpening result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist :img-schema="pipelineImgs.sharpening_schema.img_out" />
           </TableCard>
         </div>
       </div>
@@ -79,7 +114,7 @@ import {
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 
 const getImgParams = {
-  name: 'letters.png',
+  // name: 'letters.png',
 };
 
 const {
