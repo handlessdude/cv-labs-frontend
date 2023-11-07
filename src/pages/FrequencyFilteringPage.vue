@@ -122,8 +122,7 @@ const {
   isLoading: areImgsLoading,
   triggerFetch: startPipeline,
 } = useFetcher<TestSchema>(
-  async () =>
-    await frequencyFilteringService.smootheningSharpening(getImgParams)
+  async () => await frequencyFilteringService.applyIdealFilter(getImgParams)
 );
 
 onMounted(() => {

@@ -2,7 +2,7 @@ import { HttpBasedService } from 'src/services/httb-based.service';
 import { GetImageParams, ImageSchema } from 'src/models/image-service';
 
 const BASE_PATH = '/frequency-filtering';
-const SMOOTHENING_SHARPENING_PATH = '/smoothening-sharpening';
+const APPLY_IDEAL_PATH = '/apply-ideal';
 
 export interface FilterApplicationSchema {
   filt: ImageSchema;
@@ -18,9 +18,9 @@ export interface TestSchema {
 }
 
 class FrequencyFilteringService extends HttpBasedService {
-  async smootheningSharpening(params: Partial<GetImageParams> = {}) {
+  async applyIdealFilter(params: Partial<GetImageParams> = {}) {
     const res = await this.httpClient.get<TestSchema>(
-      BASE_PATH + SMOOTHENING_SHARPENING_PATH,
+      BASE_PATH + APPLY_IDEAL_PATH,
       {
         params,
       }
