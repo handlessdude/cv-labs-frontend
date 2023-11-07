@@ -4,10 +4,7 @@
       <q-banner rounded class="q-pa-md">
         <div class="text-h6">Frequency filtering</div>
       </q-banner>
-      <div
-        v-if="pipelineImgs && !areImgsLoading"
-        class="overflow-auto full-width"
-      >
+      <div v-if="isPipelineReady" class="overflow-auto full-width">
         <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard>
             <ParagraphTitle
@@ -29,6 +26,9 @@
         </div>
       </div>
       <ProgressIndicator v-else class="q-ma-xl" />
+      <q-banner rounded class="q-pa-md" v-if="isPipelineReady">
+        <div class="text-body1">0. Ideal filter</div>
+      </q-banner>
       <div
         v-if="pipelineImgs && !areImgsLoading"
         class="overflow-auto full-width"
@@ -62,10 +62,7 @@
           </TableCard>
         </div>
       </div>
-      <div
-        v-if="pipelineImgs && !areImgsLoading"
-        class="overflow-auto full-width"
-      >
+      <div v-if="isPipelineReady" class="overflow-auto full-width">
         <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard>
             <ParagraphTitle
@@ -97,12 +94,16 @@
           </TableCard>
         </div>
       </div>
+
+      <q-banner rounded class="q-pa-md" v-if="isPipelineReady">
+        <div class="text-body1">1. Butterworth filter</div>
+      </q-banner>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import ImgWithHist from 'components/ImgWithHist.vue';
 import { useFetcher } from 'src/hooks/use-fetcher';
 import ParagraphTitle from 'components/ParagraphTitle.vue';
@@ -132,6 +133,10 @@ onMounted(() => {
     console.log(e);
   }
 });
+
+const isPipelineReady = computed(
+  () => pipelineImgs.value && !areImgsLoading.value
+);
 </script>
 
 <style scoped lang="scss">
