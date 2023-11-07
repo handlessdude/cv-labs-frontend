@@ -110,7 +110,7 @@ import ParagraphTitle from 'components/ParagraphTitle.vue';
 import TableCard from 'components/TableCard.vue';
 import {
   frequencyFilteringService,
-  TestSchema,
+  FilteringPipelineSchema,
 } from 'src/services/frequency-filtering.service';
 import ProgressIndicator from 'components/ProgressIndicator.vue';
 
@@ -122,7 +122,7 @@ const {
   data: pipelineImgs,
   isLoading: areImgsLoading,
   triggerFetch: startPipeline,
-} = useFetcher<TestSchema>(
+} = useFetcher<FilteringPipelineSchema>(
   async () => await frequencyFilteringService.applyIdealFilter(getImgParams)
 );
 
