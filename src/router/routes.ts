@@ -34,7 +34,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/frequency-filtering',
         name: RouteName.FREQUENCY_FILTERING,
-        component: () => import('pages/FrequencyFilteringPage.vue'),
+        component: () =>
+          import('src/features/frequency-filtering/FrequencyFilteringPage.vue'),
       },
     ],
   },
