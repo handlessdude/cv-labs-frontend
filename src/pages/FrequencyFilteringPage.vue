@@ -4,7 +4,7 @@
       <q-banner rounded class="q-pa-md">
         <div class="text-h6">Frequency filtering</div>
       </q-banner>
-      <div v-if="isPipelineReady" class="overflow-auto full-width">
+      <div class="overflow-auto full-width">
         <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard>
             <ParagraphTitle
@@ -12,7 +12,7 @@
               text="0. Source image"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.source" />
+            <ImgWithHist :loading="isSrcImgLoading" :img-schema="srcImg" />
           </TableCard>
 
           <TableCard>
@@ -21,11 +21,13 @@
               text="1. Image spectrum"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.spectrum" />
+            <ImgWithHist
+              :loading="isSrcImgSpecLoading"
+              :img-schema="srcImgSpec"
+            />
           </TableCard>
         </div>
       </div>
-      <ProgressIndicator v-else class="q-ma-xl" />
       <q-banner rounded class="q-pa-md" v-if="isPipelineReady">
         <div class="text-body1">0. Ideal filter</div>
       </q-banner>
@@ -112,11 +114,28 @@ import {
   frequencyFilteringService,
   FilteringPipelineSchema,
 } from 'src/services/frequency-filtering.service';
-import ProgressIndicator from 'components/ProgressIndicator.vue';
+import { imageService } from 'src/services/image.service';
+import { ImageSchema } from 'src/models/image-service';
 
 const getImgParams = {
-  // name: 'letters.png',
+  name: 'letters.png',
 };
+
+const {
+  data: srcImg,
+  isLoading: isSrcImgLoading,
+  triggerFetch: loadSrcImg,
+} = useFetcher<ImageSchema>(
+  async () => await imageService.getItem(getImgParams)
+);
+
+const {
+  data: srcImgSpec,
+  isLoading: isSrcImgSpecLoading,
+  triggerFetch: loadSrcImgSpec,
+} = useFetcher<ImageSchema>(
+  async () => await frequencyFilteringService.getImageSpectrum(getImgParams)
+);
 
 const {
   data: pipelineImgs,
@@ -128,6 +147,8 @@ const {
 
 onMounted(() => {
   try {
+    loadSrcImg();
+    loadSrcImgSpec();
     startPipeline();
   } catch (e) {
     console.log(e);
@@ -135,7 +156,11 @@ onMounted(() => {
 });
 
 const isPipelineReady = computed(
-  () => pipelineImgs.value && !areImgsLoading.value
+  () =>
+    pipelineImgs.value &&
+    !isSrcImgLoading.value &&
+    !isSrcImgSpecLoading.value &&
+    !areImgsLoading.value
 );
 </script>
 
