@@ -3,6 +3,8 @@ import { GetImageParams, ImageSchema } from 'src/models/image-service';
 
 const BASE_PATH = '/frequency-filtering';
 const APPLY_IDEAL_PATH = '/apply-ideal';
+const APPLY_BUTTERWORTH_PATH = '/apply-butterworth';
+const APPLY_GAUSSIAN_PATH = '/apply-gaussian';
 const GET_SPECTRUM_PATH = '/get-spectrum';
 
 export interface FilterApplicationSchema {
@@ -30,6 +32,26 @@ class FrequencyFilteringService extends HttpBasedService {
   async applyIdealFilter(params: Partial<GetImageParams> = {}) {
     const res = await this.httpClient.get<FilteringPipelineSchema>(
       BASE_PATH + APPLY_IDEAL_PATH,
+      {
+        params,
+      }
+    );
+    return res.data;
+  }
+
+  async applyButterworthFilter(params: Partial<GetImageParams> = {}) {
+    const res = await this.httpClient.get<FilteringPipelineSchema>(
+      BASE_PATH + APPLY_BUTTERWORTH_PATH,
+      {
+        params,
+      }
+    );
+    return res.data;
+  }
+
+  async applyGaussianFilter(params: Partial<GetImageParams> = {}) {
+    const res = await this.httpClient.get<FilteringPipelineSchema>(
+      BASE_PATH + APPLY_GAUSSIAN_PATH,
       {
         params,
       }

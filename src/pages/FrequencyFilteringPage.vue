@@ -9,7 +9,7 @@
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="0. Source image"
+              text="0.0 Source image"
               class="q-mb-sm"
             />
             <ImgWithHist :loading="isSrcImgLoading" :img-schema="srcImg" />
@@ -18,7 +18,7 @@
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="1. Image spectrum"
+              text="0.1 Source image spectrum"
               class="q-mb-sm"
             />
             <ImgWithHist
@@ -29,77 +29,250 @@
         </div>
       </div>
       <q-banner rounded class="q-pa-md" v-if="isPipelineReady">
-        <div class="text-body1">0. Ideal filter</div>
+        <div class="text-body1">1. Ideal filter</div>
       </q-banner>
       <div
-        v-if="pipelineImgs && !areImgsLoading"
+        v-if="idealFilterPipeline && !isIdealPipelineLoading"
         class="overflow-auto full-width"
       >
         <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="2.0. Smoothing filter"
+              text="1.0.0. Smoothing filter"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.smoothing_schema.filt" />
+            <ImgWithHist
+              :img-schema="idealFilterPipeline.smoothing_schema.filt"
+            />
           </TableCard>
 
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="2.1. Smoothing result (spectrum)"
+              text="1.0.1. Smoothing result (spectrum)"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.smoothing_schema.spectrum" />
+            <ImgWithHist
+              :img-schema="idealFilterPipeline.smoothing_schema.spectrum"
+            />
           </TableCard>
 
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="2.2. Smoothing result (image)"
+              text="1.0.2. Smoothing result (image)"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.smoothing_schema.img_out" />
+            <ImgWithHist
+              :img-schema="idealFilterPipeline.smoothing_schema.img_out"
+            />
           </TableCard>
         </div>
       </div>
-      <div v-if="isPipelineReady" class="overflow-auto full-width">
+      <div
+        v-if="idealFilterPipeline && !isIdealPipelineLoading"
+        class="overflow-auto full-width"
+      >
         <div class="row q-col-gutter-x-md q-col-gutter-y-md">
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="3.0. Sharpening filter"
-              class="q-mb-sm"
-            />
-            <ImgWithHist :img-schema="pipelineImgs.sharpening_schema.filt" />
-          </TableCard>
-
-          <TableCard>
-            <ParagraphTitle
-              icon="image"
-              text="3.1. Sharpening result (spectrum)"
+              text="1.1.0. Sharpening filter"
               class="q-mb-sm"
             />
             <ImgWithHist
-              :img-schema="pipelineImgs.sharpening_schema.spectrum"
+              :img-schema="idealFilterPipeline.sharpening_schema.filt"
             />
           </TableCard>
 
           <TableCard>
             <ParagraphTitle
               icon="image"
-              text="3.1. Sharpening result (image)"
+              text="1.1.1. Sharpening result (spectrum)"
               class="q-mb-sm"
             />
-            <ImgWithHist :img-schema="pipelineImgs.sharpening_schema.img_out" />
+            <ImgWithHist
+              :img-schema="idealFilterPipeline.sharpening_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="1.1.2. Sharpening result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="idealFilterPipeline.sharpening_schema.img_out"
+            />
           </TableCard>
         </div>
       </div>
 
-      <q-banner rounded class="q-pa-md" v-if="isPipelineReady">
+      <q-banner rounded class="q-pa-md">
         <div class="text-body1">1. Butterworth filter</div>
       </q-banner>
+      <div
+        v-if="butterworthFilterPipeline && !isButterworthPipelineLoading"
+        class="overflow-auto full-width"
+      >
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.0.0. Smoothing filter"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.smoothing_schema.filt"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.0.1. Smoothing result (spectrum)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.smoothing_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.0.2. Smoothing result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.smoothing_schema.img_out"
+            />
+          </TableCard>
+        </div>
+      </div>
+      <div
+        v-if="butterworthFilterPipeline && !isButterworthPipelineLoading"
+        class="overflow-auto full-width"
+      >
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.1.0. Sharpening filter"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.sharpening_schema.filt"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.1.1. Sharpening result (spectrum)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.sharpening_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="2.1.2. Sharpening result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="butterworthFilterPipeline.sharpening_schema.img_out"
+            />
+          </TableCard>
+        </div>
+      </div>
+
+      <q-banner rounded class="q-pa-md">
+        <div class="text-body1">2. Gaussian filter</div>
+      </q-banner>
+      <div
+        v-if="gaussianFilterPipeline && !isGaussianPipelineLoading"
+        class="overflow-auto full-width"
+      >
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.0.0. Smoothing filter"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.smoothing_schema.filt"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.0.1. Smoothing result (spectrum)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.smoothing_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.0.2. Smoothing result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.smoothing_schema.img_out"
+            />
+          </TableCard>
+        </div>
+      </div>
+      <div
+        v-if="gaussianFilterPipeline && !isGaussianPipelineLoading"
+        class="overflow-auto full-width"
+      >
+        <div class="row q-col-gutter-x-md q-col-gutter-y-md">
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.1.0. Sharpening filter"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.sharpening_schema.filt"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.1.1. Sharpening result (spectrum)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.sharpening_schema.spectrum"
+            />
+          </TableCard>
+
+          <TableCard>
+            <ParagraphTitle
+              icon="image"
+              text="3.1.2. Sharpening result (image)"
+              class="q-mb-sm"
+            />
+            <ImgWithHist
+              :img-schema="gaussianFilterPipeline.sharpening_schema.img_out"
+            />
+          </TableCard>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
@@ -138,18 +311,37 @@ const {
 );
 
 const {
-  data: pipelineImgs,
-  isLoading: areImgsLoading,
-  triggerFetch: startPipeline,
+  data: idealFilterPipeline,
+  isLoading: isIdealPipelineLoading,
+  triggerFetch: loadIdealPipeline,
 } = useFetcher<FilteringPipelineSchema>(
   async () => await frequencyFilteringService.applyIdealFilter(getImgParams)
+);
+
+const {
+  data: butterworthFilterPipeline,
+  isLoading: isButterworthPipelineLoading,
+  triggerFetch: loadButterworthPipeline,
+} = useFetcher<FilteringPipelineSchema>(
+  async () =>
+    await frequencyFilteringService.applyButterworthFilter(getImgParams)
+);
+
+const {
+  data: gaussianFilterPipeline,
+  isLoading: isGaussianPipelineLoading,
+  triggerFetch: loadGaussianPipeline,
+} = useFetcher<FilteringPipelineSchema>(
+  async () => await frequencyFilteringService.applyGaussianFilter(getImgParams)
 );
 
 onMounted(() => {
   try {
     loadSrcImg();
     loadSrcImgSpec();
-    startPipeline();
+    loadIdealPipeline();
+    loadButterworthPipeline();
+    loadGaussianPipeline();
   } catch (e) {
     console.log(e);
   }
@@ -157,10 +349,10 @@ onMounted(() => {
 
 const isPipelineReady = computed(
   () =>
-    pipelineImgs.value &&
+    idealFilterPipeline.value &&
     !isSrcImgLoading.value &&
     !isSrcImgSpecLoading.value &&
-    !areImgsLoading.value
+    !isIdealPipelineLoading.value
 );
 </script>
 
