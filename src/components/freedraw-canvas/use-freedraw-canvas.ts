@@ -58,8 +58,11 @@ const useFreedrawCanvas = () => {
   onMounted(() => {
     if (!stageRef.value) return;
     if (!drawLayerRef.value) return;
-    const stage = stageRef.value.getNode();
-    const layer = drawLayerRef.value.getNode();
+    const stage: Konva.NodeConfig = stageRef.value.getNode();
+    const layer: Konva.NodeConfig = drawLayerRef.value.getNode();
+
+    stage.container().setAttribute('id', 'konva-parent');
+
     stage.container().style.backgroundColor = palette.background;
     setCallbacks(stage, layer);
   });
