@@ -37,6 +37,11 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import('src/features/frequency-filtering/FrequencyFilteringPage.vue'),
       },
+      {
+        path: '/growcut',
+        name: RouteName.GROWCUT,
+        component: () => import('src/features/growcut/GrowCutPage.vue'),
+      },
     ],
   },
   {

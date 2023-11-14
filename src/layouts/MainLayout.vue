@@ -69,6 +69,11 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'hub',
     routeName: RouteName.FREQUENCY_FILTERING,
   },
+  {
+    title: '07: Growcut',
+    icon: 'hub',
+    routeName: RouteName.GROWCUT,
+  },
 ];
 
 const leftDrawerOpen = ref(false);
