@@ -16,11 +16,12 @@ const useFreedrawCanvas = () => {
   let isPaint = false;
   let lastLine: Nullable<Konva.Line>;
 
-  const setCallbacks = (stage: Konva.NodeConfig, layer: Konva.NodeConfig) => {
+  const setCallbacks = (stage: Konva.Stage, layer: Konva.Layer) => {
     stage.on('mousedown touchstart', function () {
       if (!stageRef.value) return;
       isPaint = true;
       const pos = stage.getPointerPosition();
+      if (!pos) return;
       lastLine = new Konva.Line({
         stroke: '#df4b26',
         strokeWidth: strokeWidth.value,
@@ -40,30 +41,40 @@ const useFreedrawCanvas = () => {
     });
 
     // and core function - drawing
-    stage.on('mousemove touchmove', function (e) {
-      if (!isPaint) return;
+    stage.on(
+      'mousemove touchmove',
+      function (e: Konva.KonvaEventObject<MouseEvent>) {
+        if (!isPaint) return;
 
-      // prevent scrolling on touch devices
-      console.log(e);
-      e.evt.preventDefault();
+        // prevent scrolling on touch devices
+        e.evt.preventDefault();
 
-      const pos = stage.getPointerPosition();
-      if (!lastLine) return;
+        const pos = stage.getPointerPosition();
+        if (!lastLine || !pos) return;
 
-      const newPoints = lastLine.points().concat([pos.x, pos.y]);
-      lastLine.points(newPoints);
-    });
+        const newPoints = lastLine.points().concat([pos.x, pos.y]);
+        lastLine.points(newPoints);
+      }
+    );
+  };
+
+  const saveImage = () => {
+    if (!stageRef.value) return;
+    if (!drawLayerRef.value) return;
+    const stage: Konva.Stage = stageRef.value.getNode();
+    return stage.toDataURL({ pixelRatio: 1 });
   };
 
   onMounted(() => {
     if (!stageRef.value) return;
     if (!drawLayerRef.value) return;
-    const stage: Konva.NodeConfig = stageRef.value.getNode();
-    const layer: Konva.NodeConfig = drawLayerRef.value.getNode();
+    const stage: Konva.Stage = stageRef.value.getNode();
+    const layer: Konva.Layer = drawLayerRef.value.getNode();
 
     stage.container().setAttribute('id', 'konva-parent');
 
     stage.container().style.backgroundColor = palette.background;
+    stage.container().style.width = 'fit-content';
     setCallbacks(stage, layer);
   });
 
@@ -74,6 +85,7 @@ const useFreedrawCanvas = () => {
     strokeWidth,
     strokeWidthLimits,
     modes,
+    saveImage,
   };
 };
 

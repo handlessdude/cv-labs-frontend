@@ -15,7 +15,7 @@
               text="Foreground marking"
               class="q-mb-sm"
             />
-            <FreedrawCanvas />
+            <FreedrawCanvas ref="fgCanvas" />
           </TableCard>
           <TableCard>
             <ParagraphTitle
@@ -23,10 +23,18 @@
               text="Background marking"
               class="q-mb-sm"
             />
-            <FreedrawCanvas />
+            <FreedrawCanvas ref="bgCanvas" />
           </TableCard>
         </div>
       </div>
+      <q-banner rounded class="q-pa-md">
+        <q-btn
+          @click="onClickProcess"
+          label="Process image"
+          class="bg-green text-white"
+          no-caps
+        />
+      </q-banner>
     </div>
   </q-page>
 </template>
@@ -35,5 +43,15 @@
 import FreedrawCanvas from 'components/freedraw-canvas/FreedrawCanvas.vue';
 import ParagraphTitle from 'components/ParagraphTitle.vue';
 import TableCard from 'components/TableCard.vue';
-import ImgWithHist from 'components/ImgWithHist.vue';
+import { ref } from 'vue';
+import { Nullable } from 'src/models/generic';
+
+const bgCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
+const fgCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
+
+const onClickProcess = () => {
+  if (!bgCanvas.value || !fgCanvas.value) return;
+  console.log(fgCanvas.value.saveImage());
+  console.log(bgCanvas.value.saveImage());
+};
 </script>
