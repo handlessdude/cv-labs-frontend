@@ -4,11 +4,16 @@ import Konva from 'konva';
 import { onMounted, ref } from 'vue';
 import { palette } from 'components/spline-canvas/resources';
 
+enum CanvasMode {
+  ERASER = 'Eraser',
+  BRUSH = 'Brush',
+}
+
 const useFreedrawCanvas = () => {
   const stageRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
   const drawLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 
-  const modes = ['eraser', 'brush'];
+  const modes = [CanvasMode.ERASER, CanvasMode.BRUSH];
   const mode = ref(modes[1]);
   const strokeWidth = ref(5);
   const strokeWidthLimits = { min: 1, max: 50 };
@@ -26,7 +31,7 @@ const useFreedrawCanvas = () => {
         stroke: '#df4b26',
         strokeWidth: strokeWidth.value,
         globalCompositeOperation:
-          mode.value === 'brush' ? 'source-over' : 'destination-out',
+          mode.value === CanvasMode.BRUSH ? 'source-over' : 'destination-out',
         // round cap for smoother lines
         lineCap: 'round',
         lineJoin: 'round',
