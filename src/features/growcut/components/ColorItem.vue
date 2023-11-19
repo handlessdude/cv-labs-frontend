@@ -5,7 +5,6 @@ interface ColorItemProps {
   color: string;
 }
 const props = defineProps<ColorItemProps>();
-console.log(props);
 </script>
 
 <template>
