@@ -30,7 +30,7 @@ const useFreedrawCanvas = () => {
   const toolMode = ref(toolModes[1]);
   const markingMode = ref(markingModes[0]);
 
-  const strokeWidth = ref(5);
+  const strokeWidth = ref(50);
   const strokeWidthLimits = { min: 1, max: 50 };
 
   let isPaint = false;

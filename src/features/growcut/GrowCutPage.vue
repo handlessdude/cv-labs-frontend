@@ -29,7 +29,11 @@
           no-caps
         />
       </q-banner>
-      <ImgWithHist v-if="imgOut" :img-schema="imgOut" :loading="isImgLoading" />
+      <ImgWithHist
+        v-if="imgOut || isImgLoading"
+        :img-schema="imgOut"
+        :loading="isImgLoading"
+      />
     </div>
   </q-page>
 </template>
