@@ -11,7 +11,7 @@ export interface CutObjectParams {
 
 class GrowcutService extends HttpBasedService {
   async cutObject(data: CutObjectParams) {
-    const res = await this.httpClient.post<Array<ImageSchema>>(
+    const res = await this.httpClient.post<ImageSchema>(
       BASE_PATH + CUT_OBJECT_PATH,
       data
     );

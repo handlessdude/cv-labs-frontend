@@ -15,21 +15,21 @@
         </div>
       </q-banner>
       <TableCard>
-        <ParagraphTitle icon="edit" text="Markings" class="q-mb-sm" />
-        <FreedrawCanvas ref="markingsCanvas" :image="imageElement" />
+        <div class="column no-wrap">
+          <ParagraphTitle icon="edit" text="Markings" class="q-mb-sm" />
+          <FreedrawCanvas ref="markingsCanvas" :image="imageElement" />
+        </div>
       </TableCard>
-      <!--      <TableCard>-->
-      <!--        <ParagraphTitle icon="edit" text="Background marking" class="q-mb-sm" />-->
-      <!--        <FreedrawCanvas ref="bgCanvas" :image="imageElement" />-->
-      <!--      </TableCard>-->
       <q-banner rounded class="q-pa-md">
         <q-btn
           @click="onClickProcess"
+          :disable="!imageFile"
           label="Process image"
           class="bg-green text-white"
           no-caps
         />
       </q-banner>
+      <ImgWithHist v-if="imgOut" :img-schema="imgOut" :loading="isImgLoading" />
     </div>
   </q-page>
 </template>
@@ -42,20 +42,36 @@ import { ref } from 'vue';
 import { Nullable } from 'src/models/generic';
 import { useImageReader } from 'src/hooks/use-image-reader';
 import { growcutService } from 'src/services/growcut.service';
+import ImgWithHist from 'components/ImgWithHist.vue';
+import { ImageSchema } from 'src/models/image-service';
+import { useQuasar } from 'quasar';
 
 const markingsCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
 
 const { imageFile, imageElement } = useImageReader();
+const $q = useQuasar();
+
+const isImgLoading = ref(false);
+const imgOut = ref<Nullable<ImageSchema>>(null);
 
 const onClickProcess = async () => {
   if (!markingsCanvas.value || !imageElement.value) return;
   const markings = markingsCanvas.value.getDrawDataUrl();
-  console.log(
-    await growcutService.cutObject({
+  try {
+    isImgLoading.value = true;
+    imgOut.value = await growcutService.cutObject({
       src_img: imageElement.value.src,
       markings,
-    })
-  );
+    });
+  } catch (e) {
+    console.log(e);
+    $q.notify({
+      type: 'negative',
+      message: 'Error processing image',
+    });
+  } finally {
+    isImgLoading.value = false;
+  }
 };
 </script>
 
