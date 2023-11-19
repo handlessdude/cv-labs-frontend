@@ -1,7 +1,27 @@
 <template>
   <div class="controls__container">
-    <div class="row no-wrap q-gutter-x-md q-mb-md">
-      <q-select v-model="mode" outlined dense :options="modes" />
+    <div class="row no-wrap items-stretch q-gutter-x-md q-mb-md">
+      <q-select
+        style="min-width: 95px"
+        v-model="toolMode"
+        outlined
+        dense
+        :options="toolModes"
+      />
+      <q-select
+        style="min-width: 218px"
+        v-model="markingMode"
+        outlined
+        dense
+        :options="markingModes"
+      >
+        <template v-slot:selected-item="scope">
+          <ColorItem v-bind="scope.opt" />
+        </template>
+        <template v-slot:option="scope">
+          <ColorItem v-bind="{ ...scope.itemProps, ...scope.opt }" />
+        </template>
+      </q-select>
       <FlatBtn label="Save markings" icon="save" @click="downloadMarkings" />
       <FlatBtn label="Save image" icon="save" @click="downloadImage" />
     </div>
@@ -23,17 +43,18 @@
 <script setup lang="ts">
 import { configStage } from 'components/spline-canvas/resources';
 import { useFreedrawCanvas } from 'components/freedraw-canvas/use-freedraw-canvas';
-import { Nullable } from 'src/models/generic';
+import { MaybeUndefined, Nullable } from 'src/models/generic';
 import { computed, reactive, watch } from 'vue';
-import Konva from 'konva';
 import FlatBtn from 'components/FlatBtn.vue';
+import ColorItem from 'src/features/growcut/components/ColorItem.vue';
 
 interface IFreedrawCanvasProps {
   image: Nullable<HTMLImageElement>;
 }
 
 interface IFreedrawCanvasExpose {
-  saveImage: () => void;
+  getImgDataUrl: () => MaybeUndefined<string>;
+  getDrawDataUrl: () => MaybeUndefined<string>;
 }
 
 const props = defineProps<IFreedrawCanvasProps>();
@@ -72,11 +93,14 @@ watch(() => props.image, resizeStage, {
 const {
   drawLayerRef,
   stageRef,
-  mode,
+  toolMode,
+  toolModes,
+  markingModes,
+  markingMode,
   strokeWidth,
-  modes,
   strokeWidthLimits,
-  saveImage,
+  getImgDataUrl,
+  getDrawDataUrl,
 } = useFreedrawCanvas();
 
 const downloadResource = (uri: string, name: string) => {
@@ -88,24 +112,24 @@ const downloadResource = (uri: string, name: string) => {
   document.body.removeChild(link);
 };
 
-const resourceSaveConfig = { pixelRatio: 1 };
 const downloadImage = () => {
   if (!stageRef.value) return;
-  const stage: Konva.Stage = stageRef.value.getNode();
-  const uri = stage.toDataURL(resourceSaveConfig);
+  const uri = getImgDataUrl();
+  if (!uri) return;
   const name = 'stage.png';
   downloadResource(uri, name);
 };
 
 const downloadMarkings = () => {
   if (!drawLayerRef.value) return;
-  const stage: Konva.Stage = drawLayerRef.value.getNode();
-  const uri = stage.toDataURL(resourceSaveConfig);
+  const uri = getDrawDataUrl();
+  if (!uri) return;
   const name = 'markings.png';
   downloadResource(uri, name);
 };
 
 defineExpose<IFreedrawCanvasExpose>({
-  saveImage,
+  getImgDataUrl,
+  getDrawDataUrl,
 });
 </script>

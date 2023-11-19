@@ -15,17 +15,13 @@
         </div>
       </q-banner>
       <TableCard>
-        <ParagraphTitle icon="edit" text="Foreground marking" class="q-mb-sm" />
-        <FreedrawCanvas ref="fgCanvas" :image="imageElement" />
+        <ParagraphTitle icon="edit" text="Markings" class="q-mb-sm" />
+        <FreedrawCanvas ref="markingsCanvas" :image="imageElement" />
       </TableCard>
-      <TableCard>
-        <ParagraphTitle icon="edit" text="Background marking" class="q-mb-sm" />
-        <FreedrawCanvas ref="bgCanvas" :image="imageElement" />
-      </TableCard>
-      <!--      <div class="overflow-auto full-width">-->
-      <!--        <div class="row q-col-gutter-x-md q-col-gutter-y-md">-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <!--      <TableCard>-->
+      <!--        <ParagraphTitle icon="edit" text="Background marking" class="q-mb-sm" />-->
+      <!--        <FreedrawCanvas ref="bgCanvas" :image="imageElement" />-->
+      <!--      </TableCard>-->
       <q-banner rounded class="q-pa-md">
         <q-btn
           @click="onClickProcess"
@@ -45,16 +41,21 @@ import TableCard from 'components/TableCard.vue';
 import { ref } from 'vue';
 import { Nullable } from 'src/models/generic';
 import { useImageReader } from 'src/hooks/use-image-reader';
+import { growcutService } from 'src/services/growcut.service';
 
-const bgCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
-const fgCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
+const markingsCanvas = ref<Nullable<typeof FreedrawCanvas>>(null);
 
 const { imageFile, imageElement } = useImageReader();
 
-const onClickProcess = () => {
-  if (!bgCanvas.value || !fgCanvas.value) return;
-  console.log(fgCanvas.value.saveImage());
-  console.log(bgCanvas.value.saveImage());
+const onClickProcess = async () => {
+  if (!markingsCanvas.value || !imageElement.value) return;
+  const markings = markingsCanvas.value.getDrawDataUrl();
+  console.log(
+    await growcutService.cutObject({
+      src_img: imageElement.value.src,
+      markings,
+    })
+  );
 };
 </script>
 

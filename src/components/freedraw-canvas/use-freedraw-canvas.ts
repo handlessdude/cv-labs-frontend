@@ -4,7 +4,7 @@ import Konva from 'konva';
 import { onMounted, ref } from 'vue';
 import { palette } from 'components/spline-canvas/resources';
 
-enum CanvasMode {
+enum ToolMode {
   ERASER = 'Eraser',
   BRUSH = 'Brush',
 }
@@ -13,8 +13,23 @@ const useFreedrawCanvas = () => {
   const stageRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
   const drawLayerRef: Ref<Nullable<Konva.NodeConfig>> = ref(null);
 
-  const modes = [CanvasMode.ERASER, CanvasMode.BRUSH];
-  const mode = ref(modes[1]);
+  const markingModes = [
+    {
+      id: 'Foreground',
+      colorName: 'red',
+      color: '#ff0000',
+    },
+    {
+      id: 'Background',
+      colorName: 'blue',
+      color: '#0000ff',
+    },
+  ];
+  const toolModes = [ToolMode.ERASER, ToolMode.BRUSH];
+
+  const toolMode = ref(toolModes[1]);
+  const markingMode = ref(markingModes[0]);
+
   const strokeWidth = ref(5);
   const strokeWidthLimits = { min: 1, max: 50 };
 
@@ -28,10 +43,10 @@ const useFreedrawCanvas = () => {
       const pos = stage.getPointerPosition();
       if (!pos) return;
       lastLine = new Konva.Line({
-        stroke: '#df4b26',
+        stroke: markingMode.value.color,
         strokeWidth: strokeWidth.value,
         globalCompositeOperation:
-          mode.value === CanvasMode.BRUSH ? 'source-over' : 'destination-out',
+          toolMode.value === ToolMode.BRUSH ? 'source-over' : 'destination-out',
         // round cap for smoother lines
         lineCap: 'round',
         lineJoin: 'round',
@@ -63,11 +78,18 @@ const useFreedrawCanvas = () => {
     );
   };
 
-  const saveImage = () => {
+  const resourceSaveConfig = { pixelRatio: 1 };
+
+  const getImgDataUrl = () => {
     if (!stageRef.value) return;
+    const layer: Konva.Stage = stageRef.value.getNode();
+    return layer.toDataURL(resourceSaveConfig);
+  };
+
+  const getDrawDataUrl = () => {
     if (!drawLayerRef.value) return;
-    const stage: Konva.Stage = stageRef.value.getNode();
-    return stage.toDataURL({ pixelRatio: 1 });
+    const layer: Konva.Stage = drawLayerRef.value.getNode();
+    return layer.toDataURL(resourceSaveConfig);
   };
 
   onMounted(() => {
@@ -86,11 +108,14 @@ const useFreedrawCanvas = () => {
   return {
     stageRef,
     drawLayerRef,
-    mode,
     strokeWidth,
     strokeWidthLimits,
-    modes,
-    saveImage,
+    toolMode,
+    toolModes,
+    markingModes,
+    markingMode,
+    getImgDataUrl,
+    getDrawDataUrl,
   };
 };
 
